@@ -4,7 +4,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "toas2dat_cmd.h"
-#include "presto.h"
 
 #define WORKLEN 65536
 #define SECPERDAY 86400
@@ -14,6 +13,15 @@
 #ifdef USEDMALLOC
 #include "dmalloc.h"
 #endif
+
+/* Define a minimal infodata structure with only the fields we need */
+typedef struct mini_infodata {
+    long N;              /* Number of bins in the data file */
+    double dt;           /* Width of each time series bin (sec) */
+    double mjd_i;        /* Integer part of MJD of first data */
+    double mjd_f;        /* Fractional part of MJD of first data */
+    char name[100];      /* Data file name without suffix */
+} infodata;
 
 unsigned long getfilelen(FILE * file, size_t size)
 {
@@ -73,6 +81,55 @@ int read_toas(FILE *infile, double **toas)
         }
     }
     return numtoa;
+}
+
+void readinf(infodata *idata, char *filenm)
+{
+    FILE *infofile;
+    char *tmp1, *tmp2, line[200], infofilenm[200];
+    
+    sprintf(infofilenm, "%s.inf", filenm);
+    infofile = fopen(infofilenm, "r");
+    if (!infofile) {
+        fprintf(stderr, "Error opening information file '%s'.\n", infofilenm);
+        exit(-1);
+    }
+    
+    /* Initialize default values */
+    idata->N = 0;
+    idata->dt = 0.0;
+    idata->mjd_i = 0.0;
+    idata->mjd_f = 0.0;
+    
+    /* Read the file line by line */
+    while (fgets(line, 200, infofile)) {
+        if (line[0] == '#' || line[0] == '\n')
+            continue;
+        
+        if (strncmp(line, " Data file name", 14) == 0) {
+            tmp1 = strtok(line, "\"");
+            tmp1 = strtok(NULL, "\"");
+            strcpy(idata->name, tmp1);
+        } else if (strncmp(line, " Number of bins", 14) == 0) {
+            sscanf(line, " Number of bins in the time series = %ld", &idata->N);
+        } else if (strncmp(line, " Width of each time series", 25) == 0) {
+            sscanf(line, " Width of each time series bin (sec) = %lf", &idata->dt);
+        } else if (strncmp(line, " Epoch of observation", 20) == 0) {
+            sscanf(line, " Epoch of observation (MJD) = %lf", &idata->mjd_i);
+            tmp1 = strchr(line, '.');
+            if (tmp1) {
+                tmp1++;
+                tmp2 = tmp1;
+                while (*tmp2 >= '0' && *tmp2 <= '9')
+                    tmp2++;
+                *tmp2 = '\0';
+                idata->mjd_f = atof(tmp1);
+                idata->mjd_f = idata->mjd_f * pow(10.0, -strlen(tmp1));
+                idata->mjd_i = floor(idata->mjd_i);
+            }
+        }
+    }
+    fclose(infofile);
 }
 
 
