@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "toas2dat_cmd.h"
+#include "presto.h"
 
 #define WORKLEN 65536
 #define SECPERDAY 86400
@@ -98,6 +99,42 @@ int main(int argc, char *argv[])
     /* Parse the command line using the excellent program Clig */
 
     cmd = parseCmdline(argc, argv);
+
+    /* If -inf flag is used, read parameters from the .inf file */
+    if (cmd->inffileP) {
+        char *root;
+        infodata idata;
+        
+        // Extract the root filename (remove .inf extension if present)
+        root = strdup(cmd->inffile);
+        if (strstr(root, ".inf"))
+            *(strstr(root, ".inf")) = '\0';
+        
+        printf("\nReading parameters from '%s.inf':\n", root);
+        
+        // Read the .inf file
+        readinf(&idata, root);
+        
+        // Set the parameters from the .inf file
+        cmd->dt = idata.dt;            // Sample time in seconds
+        cmd->numout = idata.N;         // Number of bins
+        
+        // Only set t0 if not explicitly specified on command line
+        if (!cmd->t0P) {
+            cmd->t0 = idata.mjd_i + idata.mjd_f;  // Epoch as MJD
+            cmd->t0P = 1;
+        }
+        
+        // Mark parameters as set
+        cmd->dtP = 1;
+        cmd->numoutP = 1;
+        
+        printf("  Sample time (dt) = %.10g s\n", cmd->dt);
+        printf("  Num points (N)   = %ld\n", cmd->numout);
+        printf("  Epoch (MJD)      = %.10f\n", cmd->t0);
+        
+        free(root);
+    }
 
 #ifdef DEBUG
     showOptionValues();

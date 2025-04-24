@@ -31,6 +31,10 @@ typedef struct s_Cmdline {
   char floatP;
   /***** -sec: TOA unit is seconds (default is days) */
   char secP;
+  /***** -inf: flag to use .inf file for n, dt and t0. */
+  char inffileP;
+  char *inffile;
+  char inffileC;   
   /***** uninterpreted command line parameters */
   int argc;
   /*@null*/char **argv;

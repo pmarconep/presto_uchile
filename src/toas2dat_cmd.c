@@ -44,6 +44,10 @@ static Cmdline cmd = {
   /* floatP = */ 0,
   /***** -sec: TOA unit is seconds (default is days) */
   /* secP = */ 0,
+  /***** -inf: Read parameter values from .inf file */
+  /* inffileP = */ 0,
+  /* inffile = */ (char*)0,
+  /* inffileC = */ 0,
   /***** uninterpreted rest of command line */
   /* argc = */ 0,
   /* argv = */ (char**)0,
@@ -832,6 +836,19 @@ showOptionValues(void)
     }
     printf("\n");
   }
+
+  /***** -inf: Read parameter values from .inf file */
+  if( !cmd.inffileP ) {
+    printf("-inf not found.\n");
+  } else {
+    printf("-inf found:\n");
+    if( !cmd.inffileC ) {
+      printf("  no values\n");
+    } else {
+      printf("  value = `%s'\n", cmd.inffile);
+    }
+  }
+
 }
 /**********************************************************************/
 
@@ -851,6 +868,7 @@ usage(void)
   fprintf(stderr,"%s","     -text: TOAs are ASCII text (default is binary double)\n");
   fprintf(stderr,"%s","    -float: TOAs are binary floats (default is binary double)\n");
   fprintf(stderr,"%s","      -sec: TOA unit is seconds (default is days)\n");
+  fprintf(stderr,"%s","      -inf: Read parameter values from .inf file. This overrides -n, -dt and -t0\n");
   fprintf(stderr,"%s","      file: Input TOA file name\n");
   fprintf(stderr,"%s","            1 value\n");
   fprintf(stderr,"%s","  version: 26Sep17\n");
@@ -863,6 +881,7 @@ parseCmdline(int argc, char **argv)
 {
   int i;
   char missingMandatory = 0;
+  int usingInfFile = 0;
 
   Program = argv[0];
   cmd.full_cmd_line = catArgv(argc, argv);
@@ -921,6 +940,15 @@ parseCmdline(int argc, char **argv)
       continue;
     }
 
+    if( 0==strcmp("-inf", argv[i]) ) {
+      int keep = i;
+      cmd.inffileP = 1;
+      i = getStringOpt(argc, argv, i, &cmd.inffile, 1);
+      cmd.inffileC = i-keep;
+      usingInfFile = 1;
+      continue;
+    }
+
     if( argv[i][0]=='-' ) {
       fprintf(stderr, "\n%s: unknown option `%s'\n\n",
               Program, argv[i]);
@@ -929,14 +957,17 @@ parseCmdline(int argc, char **argv)
     argv[cmd.argc++] = argv[i];
   }/* for i */
 
-  if( !cmd.numoutP ) {
-    missingErr("-n");
-    missingMandatory = 1;
+  if (!usingInfFile) {
+    if( !cmd.numoutP ) {
+      missingErr("-n");
+      missingMandatory = 1;
+    }
+    if( !cmd.dtP ) {
+      missingErr("-dt");
+      missingMandatory = 1;
+    }
   }
-  if( !cmd.dtP ) {
-    missingErr("-dt");
-    missingMandatory = 1;
-  }
+
   if( !cmd.outfileP ) {
     missingErr("-o");
     missingMandatory = 1;
