@@ -1,43 +1,18 @@
 [![PINT on ASCL](https://img.shields.io/badge/ascl-1107.017-blue.svg)](https://ascl.net/1107.017)
 
-# [PRESTO](https://github.com/scottransom/presto/)
+# IQUEYE at Gemini South Fork
 
 PRESTO is a large suite of pulsar search and analysis software developed primarily by Scott Ransom mostly from scratch, and released under the GPL (v2). It was primarily designed to efficiently search for binary millisecond pulsars from long observations of globular clusters (although it has since been used in several surveys with short integrations and to process a lot of X-ray data as well). It is written primarily in ANSI C, with many of the recent routines in Python. According to Steve Eikenberry, PRESTO stands for: PulsaR Exploration and Search TOolkit!
 
-**PRESTO has discovered well over 1500 pulsars, including ~500 recycled and/or binary pulsars!**
+## About this fork
 
-## Version 5.0.3:
- * Updated ATNF Pulsar Catalog to v2.51
- * Added an experimental version of `fit_circular_orbit` using sliders in `examplescripts`
- * Added the ability to use `pygaussfit.py` without middle or right mouse buttons
- * Fixed a couple memory issues in `rednoise`, thanks to @bwmeyers
- * Explicitly set the random number seeds (for reproducibility) in `makedata`
- * Several other very minor tweaks and bug fixes
+This fork is based on **PRESTO 5.0.3**. This brings some modifications so all thw software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
 
-## Version 5.0.2:
- * Updated the C wrappers for PGPLOT for the Numpy 2.0 C API (with thanks to Tom Marsh)
- * Python v3.9 or newer is now required.
- * Several minor bug fixes, including to `injectpsr.py`, thanks to @remsforian
+### Extra functions
+- Gemini South, ARO and IAR telescopes added.
 
-## Version 5.0.1:
- * Minor improvements over v5.0.0
- * Some clarifications and improvements to the build process
- * Addition of new recipes for docker / singularity images (thanks Alessandro Ridolfi!)
- * Bugfix in `rednoise` having to do with absolute paths (thanks Alessandro Ridolfi!)
- * Bugfix that checks to see if the maskfile you intend to use matches the properties of the data you are using
-
-## Version 5.0.0:
- * This is a major release since I've moved to a completely different and modern build system: [meson](https://mesonbuild.com/), along with the [meson-python](https://meson-python.readthedocs.io/en/latest/) backend. This was required since *Numpy* has deprecated `numpy.distutils` and this caused python builds to stop working with Python v3.12.
-   * See the [INSTALL.md](https://github.com/scottransom/presto/blob/master/INSTALL.md) for updated installation instructions.
-   * You will need to install **meson**, **meson-python**, and **ninja**, but that is easily done via `pip`!
-   * Python v3.8 or newer is now required.
- * All of the old Spigot-related codes have been removed. If you need to process Spigot data, please use the `classic` branch that is mentioned in the README.md.
- * All of the `slalib` codes (and the python interface to it) have been removed. If you need that stuff, you should transition to [ERFA](https://github.com/liberfa/erfa) and/or [Astropy](https://www.astropy.org/).
- * There are two nice new python utilities:
-   * `binary_utils.py` reads a parfile of a binary pulsar and computes min/max observed barycentric spin periods or velocities as either a function of the orbit (default), or for a prescribed duration of time, and optionally plots those. It also shows basic information about the binary.
-   * `compare_periods.py` compares candidate spin periods and their integer and fractional harmonics with one or more parfiles to a prescribed fractional tolerance. 
-
-For information on older versions, please see the [CHANGELOG.md](https://github.com/scottransom/presto/blob/master/CHANGELOG.md).
+### Extra commands
+- **fits2dat.py**: This can transform *.fits* to *.dat* baricentering in the process.
 
 ## About PRESTO:
 PRESTO is written with portability, ease-of-use, and memory efficiency in mind, it can currently handle raw data from the following pulsar machines or formats:
