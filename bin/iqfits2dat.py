@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import subprocess
 import shlex
 import os
@@ -227,7 +227,7 @@ def main(args):
     
     # output dirs
     final_dir = str(args.output_dir)
-    final_path = final_dir + '/' + filename #+ '_bary'
+    final_path = final_dir
 
     #checking ra and dec
     if args.ra and args.dec:
@@ -253,7 +253,7 @@ def main(args):
     else:
         MJDs = a[1].read_column("TIME") + float(h1["TRJDREF"]) - 0.5
     
-    os.makedirs(final_dir, exist_ok=True)
+    # os.makedirs(final_dir, exist_ok=True)
     
     # Status message
     print('\r    Writing events file...                           ', end='')
@@ -289,13 +289,6 @@ def main(args):
     print('\r    Done                                             ')
     print()
     
-    #cleaning pulsar folder
-    try:
-        shutil.rmtree(pulsar_temp_folder)
-        print(f"Successfully removed temporary directory: {pulsar_temp_folder}")
-    except Exception as e:
-        print(f"Error while removing temporary directory: {e}")
-        
     # Clean up the temporary directory
     print("Cleaning up temporary files...")
     try:
