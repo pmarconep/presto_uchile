@@ -6,7 +6,7 @@ PRESTO is a large suite of pulsar search and analysis software developed primari
 
 ## About this fork
 
-This fork is based on **PRESTO 5.0.3**. This brings some modifications so all thw software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
+This fork is based on **PRESTO 5.0.3**. This brings some modifications so all the software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
 
 ### Extra functions
 - Gemini South, ARO and IAR telescopes added.
