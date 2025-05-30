@@ -63,6 +63,8 @@ usage:  get_TOAs.py [options which must include -t or -g] pfd_file
   [-g gausswidth, --gaussian=width]  : Use a Gaussian template of FWHM width
                                        or, if the arg is a string, read the file
                                        to get multiple-gaussian parameters
+  [-m, --inffile]                  : Provide path to inf file. If not provided
+                                       will try to find for it with filename.
   [-t templateprof, --template=prof] : The template .bestprof file to use
   [-k subs_list, --kill=subs_list]   : List of subbands to ignore
   [-i ints_list, --kints=ints_list]  : List of intervals to ignore
@@ -106,10 +108,10 @@ usage:  get_TOAs.py [options which must include -t or -g] pfd_file
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "herfp2s:n:d:g:t:o:k:i:",
+        opts, args = getopt.getopt(sys.argv[1:], "herfp2s:n:d:g:t:o:k:i:m:",
                                    ["help", "event", "norotate", "FFTFITouts", "phase",
                                     "tempo2","subbands=", "numtoas=", "dm=", "gaussian=",
-                                    "template=", "offset=", "kill=", "kints="])
+                                    "template=", "offset=", "kill=", "kints=", "inffile="])
                                     
     except getopt.GetoptError:
         # print help information and exit:
@@ -165,6 +167,8 @@ if __name__ == '__main__':
                 gaussfitfile = a
         if o in ("-t", "--template"):
             templatefilenm = a
+        if o in ("-m", "--inffile"):
+            inffilepath = a
         if o in ("-o", "--offset"):
             offset = float(a)
         if o in ("-k", "--kill"):
@@ -183,7 +187,7 @@ if __name__ == '__main__':
                     kints.append(int(ints))
 
     # Read the prepfold output file and the binary profiles
-    fold_pfd = pfd(sys.argv[-1])
+    fold_pfd = pfd(sys.argv[-1], inffilepath = inffilepath)
 
     # Check to make sure we can use this .pfd for timing purposes
     if not fold_pfd.use_for_timing():
