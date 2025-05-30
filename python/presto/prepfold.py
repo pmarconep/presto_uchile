@@ -12,8 +12,9 @@ from presto.presto import chi2_sigma
 
 class pfd(object):
 
-    def __init__(self, filename):
+    def __init__(self, filename, inffilepath = False):
         self.pfd_filename = filename
+        self.inffilepath = inffilepath
         infile = open(filename, "rb")
         # See if the .bestprof file is around
         try:
@@ -118,7 +119,10 @@ class pfd(object):
             self.profs = Num.reshape(self.profs, (self.npart, self.nsub, self.proflen))
         if (self.numchan==1):
             try:
-                idata = infodata.infodata(self.filenm[:self.filenm.rfind(b'.')]+b".inf")
+                if self.inffilepath == False:
+                    idata = infodata.infodata(self.filenm[:self.filenm.rfind(b'.')]+b".inf")
+                else:
+                    idata = infodata.infodata(self.inffilepath)
                 try:
                     if idata.waveband=="Radio":
                         self.bestdm = idata.DM
@@ -127,7 +131,7 @@ class pfd(object):
                         self.bestdm = 0.0
                         self.numchan = 1
             except IOError:
-                print("Warning!  Can't open the .inf file for "+filename+"!")
+                print("Warning!  Can't open the .inf file for "+filename+"!\nPlease provide path to .inf file using -m")
         self.binspersec = self.fold_p1*self.proflen
         self.chanpersub = self.numchan // self.nsub
         self.subdeltafreq = self.chan_wid*self.chanpersub
