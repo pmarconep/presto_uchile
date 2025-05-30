@@ -892,14 +892,27 @@ def delay_from_DM(DM, freq_emitted):
     a Dispersion Measure (DM) in cm-3 pc, and the emitted
     frequency (freq_emitted) of the pulsar in MHz.
     """
-    if (type(freq_emitted) == type(0.0)):
-        if (freq_emitted > 0.0):
-            return DM / (0.000241 * freq_emitted * freq_emitted)
-        else:
-            return 0.0
+    input_is_scalar = Num.isscalar(freq_emitted)
+    input_is_list = isinstance(freq_emitted, list)
+
+    # Convert to numpy array for calculation
+    freq_array = Num.asarray(freq_emitted, dtype=float)
+
+    # Initialize result array with zeros
+    result = Num.zeros_like(freq_array)
+
+    # Only calculate for positive frequency values to avoid division by zero
+    mask = freq_array > 0.0
+    if Num.any(mask):
+        result[mask] = DM / (0.000241 * freq_array[mask] * freq_array[mask])
+
+    # Return in the same format as the input
+    if input_is_scalar:
+        return float(result.item() if result.size == 1 else result[0])
+    elif input_is_list:
+        return result.tolist()
     else:
-        return Num.where(freq_emitted > 0.0,
-                         DM / (0.000241 * freq_emitted * freq_emitted), 0.0)
+        return result
 
 
 def delay_from_foffsets(df, dfd, dfdd, times):
