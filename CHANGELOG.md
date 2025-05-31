@@ -1,4 +1,5 @@
-# PRESTO - Gemini South Changelog
+# PRESTO - Gemini South Changelog 
+This fork is based in **PRESTO 5.0.3**
 
 ## v1.1
 - Added TEMPO2 system wide.
