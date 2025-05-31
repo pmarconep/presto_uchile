@@ -1,0 +1,216 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV PSRHOME /software
+
+RUN apt-get update &&\
+    apt-get install -y --no-install-recommends \
+    git \   
+    ca-certificates
+
+RUN apt install -y git firefox openssh-server xauth build-essential libfftw3-bin libfftw3-dev pgplot5 libglib2.0-dev libcfitsio-bin libcfitsio-dev libpng-dev gfortran tcsh autoconf libx11-dev python3-dev python3-numpy python3-pip python3-venv emacs nano vim rsync less
+
+RUN apt-get install -y libtool python3-tk
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
+RUN update-alternatives --install /usr/bin/python  python  /usr/bin/python3.12 1
+
+RUN rm /usr/lib/python3.12/EXTERNALLY-MANAGED
+RUN pip install meson meson-python ninja fitsio tqdm pint-pulsar
+
+#######################
+# SSH SETUP
+#######################
+
+RUN mkdir /var/run/sshd \ 
+    && mkdir /root/.ssh \
+    && chmod 700 /root/.ssh \
+    && ssh-keygen -A \
+    && sed -i "s/^.*PasswordAuthentication.*$/PasswordAuthentication no/" /etc/ssh/sshd_config \
+    && sed -i "s/^.*X11Forwarding.*$/X11Forwarding yes/" /etc/ssh/sshd_config \
+    && sed -i "s/^.*X11UseLocalhost.*$/X11UseLocalhost no/" /etc/ssh/sshd_config \
+    && grep "^X11UseLocalhost" /etc/ssh/sshd_config || echo "X11UseLocalhost no" >> /etc/ssh/sshd_config
+
+RUN echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoA/lZRLybPOle3xpm12j7lwB264eNZgJsB8dJ8pBD/ pmarconep@gmail.com" >> /root/.ssh/authorized_keys
+
+#######################
+# TEMPO
+#######################
+WORKDIR $PSRHOME
+RUN git clone https://git.code.sf.net/p/tempo/tempo
+
+RUN rm tempo/obsys.dat
+
+RUN echo "     882589.289   -4924872.368      3943729.4  1  GBT                 1  GB" > tempo/obsys.dat \
+    && echo "     422333.200     722040.400          306.0  0  QUABBIN             2  QU" >> tempo/obsys.dat \
+    && echo "    2390487.080   -5564731.357      1994720.6  1  ARECIBO             3  AO" >> tempo/obsys.dat \
+    && echo "    -424818.000   -1472621.000           50.0  0  Hobart              4  HO" >> tempo/obsys.dat \
+    && echo "     402047.700     743853.850           43.0  0  PRINCETON           5  PR" >> tempo/obsys.dat \
+    && echo "   -1601192.000   -5041981.400      3554871.4  1  VLA                 6  VL" >> tempo/obsys.dat \
+    && echo "   -4554231.500    2816759.100     -3454036.3  1  PARKES              7  PK" >> tempo/obsys.dat \
+    && echo "    3822626.040    -154105.650      5086486.0  1  JODRELL             8  JB" >> tempo/obsys.dat \
+    && echo "     382546.300     795056.360          893.7  0  GB                  9  G3" >> tempo/obsys.dat \
+    && echo "    2765340.450   -4449597.550     -3625779.1  1  IAR                 a  AR" >> tempo/obsys.dat \
+    && echo "     382545.900     795036.870          835.8  0  GB                  b  G8" >> tempo/obsys.dat \
+    && echo "     340443.497    1073703.819         2124.0  0  VLA                 c  V2" >> tempo/obsys.dat \
+    && echo "     443118.480    -113848.480           25.0  0  NORTHERN            d  BO" >> tempo/obsys.dat \
+    && echo "   -4483311.640    2648815.920     -3671909.3  1  MOST                e  MO" >> tempo/obsys.dat \
+    && echo "    4324165.810     165927.110      4670132.8  1  Nancay              f  NC" >> tempo/obsys.dat \
+    && echo "    4033949.500     486989.400      4900430.8  1  Effels              g  EF" >> tempo/obsys.dat \
+    && echo "    3822846.760    -153802.280      5086285.9  1  JB_MKII             h  J2" >> tempo/obsys.dat \
+    && echo "     918022.899   -4346141.855      4561981.2  1  ARO                 i  AZ" >> tempo/obsys.dat \
+    && echo "    1776362.940   -5026523.140     -3491158.3  1  CPT                 k  CP" >> tempo/obsys.dat \
+    && echo "    5109360.133    2006852.586     -3238948.1  1  MEERKAT             m  MK" >> tempo/obsys.dat \
+    && echo "    1656342.300    5797947.770      2073243.2  1  GMRT                r  GM" >> tempo/obsys.dat \
+    && echo "   -2826711.951    4679231.627      3274665.7  1  SHAO                s  SH" >> tempo/obsys.dat \
+    && echo "    3826577.462     461022.624      5064892.5  1  LOFAR               t  LF" >> tempo/obsys.dat \
+    && echo "   -2559454.080    5095372.140     -2849057.2  1  MWA                 u  MW" >> tempo/obsys.dat \
+    && echo "    5088964.000     301689.800      3825017.0  1  PICO                v  PV" >> tempo/obsys.dat \
+    && echo "    1820198.199   -5208357.714     -3194851.6  1  GemS                x  GS" >> tempo/obsys.dat \
+    && echo "   -2059166.313   -3621302.972      4814304.1  1  CHIME               y  CH" >> tempo/obsys.dat \
+    && echo "    4865182.766     791922.689      4035137.2  1  SRT                 z  SR" >> tempo/obsys.dat \
+    && echo "   -1531155.544   -5045324.305      3579583.9  1  LWA-SV              -  LS" >> tempo/obsys.dat \
+    && echo "     883772.797   -4924385.598      3944042.5  1  GB                  -  G2" >> tempo/obsys.dat 
+
+ENV TEMPO=$PSRHOME"/tempo" \
+    PATH=$PATH:$PSRHOME"/tempo/bin"
+
+WORKDIR $PSRHOME/tempo
+RUN ./prepare
+
+RUN ./configure --prefix=$PSRHOME/tempo && \
+    make && \
+    make install
+
+#######################
+# TEMPO2
+#######################
+WORKDIR $PSRHOME
+
+RUN git clone https://bitbucket.org/psrsoft/tempo2.git
+
+WORKDIR $PSRHOME/tempo2
+RUN ./bootstrap
+
+# ADD observatories
+RUN sed -i 's/ -2353621.22   -4641341.52      3677052.352      GOLDSTONE           gs/  1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs/' T2runtime/observatory/observatories.dat
+
+RUN sed -i '/  1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs/a   1776362.940   -5026523.140    -3491158.3       CPT                 cpt' T2runtime/observatory/observatories.dat
+
+RUN sed -i '/  1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs/a   918022.899   -4346141.855     4561981.2       ARO                 aro' T2runtime/observatory/observatories.dat
+
+RUN cp -r T2runtime /usr/share/tempo2/
+ENV TEMPO2=/usr/share/tempo2/
+
+RUN ./configure --prefix=$PSRHOME/tempo2
+RUN make && make install
+RUN make plugins && make plugins-install
+
+ENV PATH=$PSRHOME/tempo2/bin:$PATH
+
+#######################
+# PSRCHIVE
+#######################
+WORKDIR $PSRHOME
+
+RUN git clone git://git.code.sf.net/p/psrchive/code psrchive
+
+WORKDIR $PSRHOME/psrchive
+
+RUN ./bootstrap && \
+    ./configure --prefix=$PSRHOME/psrchive && \
+    make && \
+    make check && \
+    make install
+
+#######################
+# PRESTO
+#######################
+WORKDIR $PSRHOME
+
+RUN git clone https://github.com/pmarconep/presto_uchile.git presto5
+
+#GeminiS
+RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "gemini-s") == 0 ) {\n        strcpy(obscode, "GS");\n        strcpy(outname, "Gemini-S");' presto5/src/misc_utils.c
+RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "Gemini-S") == 0) {\n        scopechar = '\''x'\'';\n        tracklen = 12;/' presto5/src/polycos.c
+
+#CPT
+RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "cpt") == 0 ) {\n        strcpy(obscode, "CP");\n        strcpy(outname, "CPT");' presto5/src/misc_utils.c
+RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "CPT") == 0) {\n        scopechar = '\''k'\'';\n        tracklen = 12;/' presto5/src/polycos.c
+
+#ARO
+RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "aro") == 0 ) {\n        strcpy(obscode, "AO");\n        strcpy(outname, "ARO");' presto5/src/misc_utils.c
+RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "ARO") == 0) {\n        scopechar = '\''i'\'';\n        tracklen = 12;/' presto5/src/polycos.c
+
+#IAR
+RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "iar") == 0 ) {\n        strcpy(obscode, "AR");\n        strcpy(outname, "IAR");' presto5/src/misc_utils.c
+RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "IAR") == 0) {\n        scopechar = '\''a'\'';\n        tracklen = 12;/' presto5/src/polycos.c
+
+WORKDIR $PSRHOME/presto5
+
+ENV PGPLOT_DIR="/usr/lib/pgplot5" \
+    PGPLOT_FONT="/usr/lib/pgplot5/grfont.dat" \
+    PGPLOT_INCLUDES="/usr/include" \
+    PGPLOT_BACKGROUND="white" \
+    PGPLOT_FOREGROUND="black" \
+    PGPLOT_DEV="/xs"
+
+ENV PRESTO="/software/presto5"
+ENV PATH="${PRESTO}/installation/bin:${PATH}"
+ENV LIBRARY_PATH=${PRESTO}/installation/lib/x86_64-linux-gnu:${LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=${PRESTO}/installation/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}
+
+WORKDIR $PSRHOME/presto5
+
+RUN meson setup build --prefix=/software/presto5/installation
+RUN python check_meson_build.py
+RUN meson compile -C build
+RUN meson install -C build
+
+WORKDIR ${PRESTO}/python
+RUN pip install --config-settings=builddir=build .
+
+WORKDIR ${PRESTO}/src
+RUN ${PRESTO}/build/src/makewisdom
+RUN mv  ${PRESTO}/src/fftw_wisdom.txt ${PRESTO}/lib
+
+RUN echo 'export PS1="\[\e[4;30m\]\u@\h\[\e[0m\]:\[\e[1;10m\]\w\[\e[0m\]\$ (docker)> "' >> ~/.bashrc
+RUN echo 'alias ls="ls --color=auto"'       >> ~/.bashrc
+RUN echo 'alias ll="ls -l"'                 >> ~/.bashrc
+RUN echo 'alias LL="ls -lL"'                >> ~/.bashrc
+RUN echo 'alias lt="ls -lrt --color"'       >> ~/.bashrc
+RUN echo 'alias lh="ls -lh --color"'        >> ~/.bashrc
+RUN echo 'alias rm="rm -i"'                 >> ~/.bashrc
+RUN echo 'alias cp="cp -i"'                 >> ~/.bashrc
+RUN echo 'alias mv="mv -i"'                 >> ~/.bashrc
+RUN echo 'alias emacs="emacs -nw"'          >> ~/.bashrc
+
+#######################
+# FINAL SETUP
+#######################
+
+#variable setup for ssh bash
+RUN echo '\n# --- PSR software environment ---' >> /root/.bashrc && \
+    echo 'export PSRHOME="/software"' >> /root/.bashrc && \
+    echo 'export TEMPO="$PSRHOME/tempo"' >> /root/.bashrc && \
+    echo 'export PATH="$PATH:$TEMPO/bin"' >> /root/.bashrc && \
+    echo '\n# --- PGPLOT environment ---' >> /root/.bashrc && \
+    echo 'export PGPLOT_DIR="/usr/lib/pgplot5"' >> /root/.bashrc && \
+    echo 'export PGPLOT_FONT="/usr/lib/pgplot5/grfont.dat"' >> /root/.bashrc && \
+    echo 'export PGPLOT_INCLUDES="/usr/include"' >> /root/.bashrc && \
+    echo 'export PGPLOT_BACKGROUND="white"' >> /root/.bashrc && \
+    echo 'export PGPLOT_FOREGROUND="black"' >> /root/.bashrc && \
+    echo 'export PGPLOT_DEV="/xs"' >> /root/.bashrc && \
+    echo '\n# --- PRESTO environment ---' >> /root/.bashrc && \
+    echo 'export PRESTO="/software/presto5"' >> /root/.bashrc && \
+    echo 'export PATH="$PRESTO/installation/bin:$PATH"' >> /root/.bashrc && \
+    echo 'export LIBRARY_PATH="$PRESTO/installation/lib/x86_64-linux-gnu:$LIBRARY_PATH"' >> /root/.bashrc && \
+    echo 'export LD_LIBRARY_PATH="$PRESTO/installation/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"' >> /root/.bashrc && \
+    echo 'export TEMPO2=/usr/share/tempo2/' >>  /root/.bashrc && \
+    echo 'export PATH=$PSRHOME/tempo2/bin:$PATH' >> /root/.bashrc && \
+    echo 'export PATH=$PSRHOME/psrchive/bin:$PATH' >> /root/.bashrc
+
+
+WORKDIR ${PSRHOME}
+
+ENTRYPOINT ["sh", "-c", "/usr/sbin/sshd && tail -f /dev/null"]
