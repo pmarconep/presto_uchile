@@ -18,6 +18,7 @@ Options:
   -t, --template TEMPLATE   : Path to the template .inf file (required)
   -o, --output_dir DIR      : Output directory for barycentered data (required)
   -dt, --bin_time BIN_TIME  : Bin time wanted for the pulsar (required)
+  -sp, --singlepulse        : Add useful .inf file entries for PRESTO single pulse search routine
   -ra, --ra RA              : Right Ascension (RA) of the pulsar (e.g., 12:31:11.307)
   -dec, --dec DEC           : Declination (DEC) of the pulsar (e.g., -45:10:35.15)
   -nobary, --no_bary        : Do not barycenter the data
@@ -140,7 +141,48 @@ def modify_inf_line(file_path, line_number, new_value):
         print(f"Error modifying .inf file: {e}")
         return False
 
-def update_inf(file_dir, filename, bin_time, t0, pts, brks, target, ra, dec, analyzed_by, bary):
+def add_inf_line_below(file_path, line_number, new_line):
+    """
+    Add a new line below a specific line in a PRESTO .inf file
+    
+    Args:
+        file_path: Path to the .inf file
+        line_number: The line number after which to add the new line (1-based indexing)
+        new_line: The new line to add (should include newline character if needed)
+        
+    Returns:
+        bool: True if addition was successful, False otherwise
+    """
+    try:
+        # Read the file content
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+        
+        # Check if the line number is valid
+        if line_number < 1 or line_number > len(lines):
+            print(f"Invalid line number {line_number}. File has {len(lines)} lines.")
+            return False
+            
+        # Ensure the new line ends with a newline character if it doesn't already
+        if not new_line.endswith('\n'):
+            new_line += '\n'
+            
+        # Insert the new line after the specified line number
+        # line_number is 1-based, so we insert at line_number index (0-based)
+        lines.insert(line_number, new_line)
+            
+        # Write the modified content back to the file
+        with open(file_path, 'w') as file:
+            file.writelines(lines)
+            
+        # print(f"Successfully added line '{new_line.strip()}' below line {line_number} in {file_path}")
+        return True
+        
+    except Exception as e:
+        print(f"Error adding line to .inf file: {e}")
+        return False
+
+def update_inf(file_dir, filename, bin_time, t0, pts, singlepulse, target, ra, dec, analyzed_by, bary, dm):
    
     copy_inf_file(args.template, file_dir, new_name=filename)
     
@@ -172,14 +214,17 @@ def update_inf(file_dir, filename, bin_time, t0, pts, brks, target, ra, dec, ana
     modify_inf_line(inf_path, 11, bin_time)
     
     ## 12 - Breakss in data (0, 1)
-    if brks:
-        modify_inf_line(inf_path, 12, 1)
-    else:
-        modify_inf_line(inf_path, 12, 0)
+    modify_inf_line(inf_path, 12, 0)
     
+    if singlepulse:
+        add_inf_line_below(inf_path, 12, f' Dispersion measure (cm-3 pc)           =  {dm}')
+        add_inf_line_below(inf_path, 12, ' Central freq of low channel (MHz)      =  148710317.46031743')   #constant for IQU
+        add_inf_line_below(inf_path, 12, ' Number of channels                     =  1')                    #constant for IQU
+        add_inf_line_below(inf_path, 12, ' Channel bandwidth (MHz)                =  297420634.92063487')   #constant for IQU
+
     ## 18 - Analyzed by
     modify_inf_line(inf_path, 18, analyzed_by)
-        
+    
     return 0
 
 radec_dict = {
@@ -198,6 +243,9 @@ def main(args):
     if not args.name:
         args.name = "Astrolab"
 
+    if not args.dm:
+        args.dm = 0
+    
     #file managing and setup
     temp_dir = pathlib.Path('/tmp')
     temp_folder = temp_dir / "fits2dat_temp"
@@ -269,7 +317,7 @@ def main(args):
 
     # Status message
     print('\r    Creating and updating .inf file...               ', end='')
-    update_inf(file_dir, filename, args.bin_time, t0, pts, False, pulsar_name, ra, dec, args.name, bary)
+    update_inf(file_dir, filename, args.bin_time, t0, pts, args.singlepulse, pulsar_name, ra, dec, args.name, bary, args.dm)
     
     # Status message
     print('\r    Converting to .dat file...                       ', end='')
@@ -302,6 +350,8 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--template', required=True, help='Path to the template .inf file')
     parser.add_argument('-o', '--output_dir', required=True, help='Output directory for barycentered data')
     parser.add_argument('-dt', '--bin_time', required=True, help='Bin time wanted for the pulsar')
+    parser.add_argument('-sp', '--singlepulse', action='store_true', help= 'Add useful .inf file entries for PRESTO single pulse search routine')
+    parser.add_argument('-dm', '--dm', required=False, help='Needed for -sp. Default:0')
     parser.add_argument('-ra', '--ra', required=False, help='Right Ascension (RA) of the pulsar ex: 12:31:11.307')
     parser.add_argument('-dec', '--dec', required=False, help='Declination (DEC) of the pulsar ex: -45:10:35.15')
     parser.add_argument('-nobary', '--no_bary', action='store_true', help='Do not barycenter the data')
