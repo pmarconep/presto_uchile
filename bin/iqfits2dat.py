@@ -8,6 +8,7 @@ import pathlib
 import fitsio
 import shutil
 import argparse
+import uuid
 
 def usage():
     sys.stderr.write("""
@@ -182,7 +183,7 @@ def add_inf_line_below(file_path, line_number, new_line):
         print(f"Error adding line to .inf file: {e}")
         return False
 
-def update_inf(file_dir, filename, bin_time, t0, pts, singlepulse, target, ra, dec, analyzed_by, bary, dm):
+def update_inf(file_dir, filename, bin_time, t0, pts, target, ra, dec, analyzed_by, bary):
    
     copy_inf_file(args.template, file_dir, new_name=filename)
     
@@ -216,12 +217,6 @@ def update_inf(file_dir, filename, bin_time, t0, pts, singlepulse, target, ra, d
     ## 12 - Breakss in data (0, 1)
     modify_inf_line(inf_path, 12, 0)
     
-    if singlepulse:
-        add_inf_line_below(inf_path, 12, f' Dispersion measure (cm-3 pc)           =  {dm}')
-        add_inf_line_below(inf_path, 12, ' Central freq of low channel (MHz)      =  148710317.46031743')   #constant for IQU
-        add_inf_line_below(inf_path, 12, ' Number of channels                     =  1')                    #constant for IQU
-        add_inf_line_below(inf_path, 12, ' Channel bandwidth (MHz)                =  297420634.92063487')   #constant for IQU
-
     ## 18 - Analyzed by
     modify_inf_line(inf_path, 18, analyzed_by)
     
@@ -254,9 +249,6 @@ def main(args):
     # input file
     fits_file = pathlib.Path(args.input_file)
     
-    # Define filename
-    filename = str(fits_file).split('_')[1].split('-')[0] + '_' + str(fits_file).split('_')[2].split('/')[0]
-
     # pulsar name
     # Try to get pulsar name from path or argument
     if args.pulsar_name:
@@ -267,11 +259,18 @@ def main(args):
             print(f"\nError: Pulsar name '{pulsar_name}' not found in dictionary. Please provide --pulsar_name.")
             sys.exit(1)
 
+    #random UUID
+    random_uuid = str(uuid.uuid4())
+
+    # Define filename
+    filename = random_uuid
+
     # temp folder
-    pulsar_temp_folder = temp_folder / pulsar_name
+    temp_pulsar_name = random_uuid + pulsar_name
+    pulsar_temp_folder = temp_folder / temp_pulsar_name
     pulsar_temp_folder.mkdir(parents=True, exist_ok=True)
-    file_dir = str(temp_folder) + '/' + pulsar_name 
-    file_path = str(temp_folder) + '/' + pulsar_name + '/' + filename
+    file_dir = str(pulsar_temp_folder) 
+    file_path = str(pulsar_temp_folder) + '/' + filename
     
     # output dirs
     final_dir = str(args.output_dir)
@@ -317,7 +316,7 @@ def main(args):
 
     # Status message
     print('\r    Creating and updating .inf file...               ', end='')
-    update_inf(file_dir, filename, args.bin_time, t0, pts, args.singlepulse, pulsar_name, ra, dec, args.name, bary, args.dm)
+    update_inf(file_dir, filename, args.bin_time, t0, pts, pulsar_name, ra, dec, args.name, bary)
     
     # Status message
     print('\r    Converting to .dat file...                       ', end='')
@@ -334,6 +333,18 @@ def main(args):
         print('\r    No barycentering requested... skipping                       ', end='')
         cmd(f'prepdata -o {final_path} -nobary {file_path}.dat')
 
+    if args.singlepulse and args.no_bary:
+        add_inf_line_below(final_path + '.inf', 12, f' Dispersion measure (cm-3 pc)           =  {args.dm}')
+        add_inf_line_below(final_path + '.inf', 12, ' Central freq of low channel (MHz)      =  148710317.46031743')   #constant for IQU
+        add_inf_line_below(final_path + '.inf', 12, ' Number of channels                     =  1')                    #constant for IQU
+        add_inf_line_below(final_path + '.inf', 12, ' Channel bandwidth (MHz)                =  297420634.92063487')   #constant for IQU
+
+    else:
+        add_inf_line_below(final_path + '_bary.inf', 12, f' Dispersion measure (cm-3 pc)           =  {args.dm}')
+        add_inf_line_below(final_path + '_bary.inf', 12, ' Central freq of low channel (MHz)      =  148710317.46031743')   #constant for IQU
+        add_inf_line_below(final_path + '_bary.inf', 12, ' Number of channels                     =  1')                    #constant for IQU
+        add_inf_line_below(final_path + '_bary.inf', 12, ' Channel bandwidth (MHz)                =  297420634.92063487')   #constant for IQU
+    
     print('\r    Done                                             ')
     print()
     
