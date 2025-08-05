@@ -273,6 +273,10 @@ if __name__ == "__main__":
         BW = current_pfd.nsub * current_pfd.subdeltafreq
         fctr = current_pfd.lofreq + 0.5 * BW
 
+        # Correction for IQUEYE data
+        if current_pfd.nsub == 1 and current_pfd.subdeltafreq == 0.0:
+            BW = 297420634.92063487 # IQUEYE Bandwidth in MHz
+
         # If there are subbands to kill, kill em'
         if killsubs is not None:
             print("    killing subbands:  ", killsubs)
@@ -379,9 +383,7 @@ if __name__ == "__main__":
 
         # Now weight the profile based on the observation duration
         # and BW as compared to the first profile
-        
-        # For some reason for IQUEYE data this kills the sum.
-        # newprof *= np.sqrt(T / base_T * BW / base_BW) 
+        newprof *= np.sqrt(T / base_T * BW / base_BW) 
 
         if 0:
             Pgplot.plotxy(newprof)
