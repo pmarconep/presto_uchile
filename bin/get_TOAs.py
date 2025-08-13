@@ -132,6 +132,7 @@ if __name__ == '__main__':
     incphs = 0
     offset = 0.0
     events = 0
+    inffilepath = False
     t2format = False
     kill = []
     kints = []
