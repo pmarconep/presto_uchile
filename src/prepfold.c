@@ -490,8 +490,6 @@ int main(int argc, char *argv[])
 
         /* Determine the number of records to use from the command line */
 
-        search.startT = cmd->startT;
-        search.endT = cmd->endT;
         lorec = (long) (cmd->startT * numrec + DBLCORRECT);
         hirec = (long) (cmd->endT * numrec + DBLCORRECT);
         startTday = lorec * recdt / SECPERDAY;
@@ -543,8 +541,6 @@ int main(int argc, char *argv[])
     } else {                    /* Raw floating point or event data (already de-dispersed if radio data) */
 
         cmd->nsub = 1;
-        search.startT = cmd->startT;
-        search.endT = cmd->endT;
 
         if (!cmd->eventsP) {
 
