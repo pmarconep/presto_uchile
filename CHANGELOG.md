@@ -1,8 +1,14 @@
 # PRESTO - Gemini South Changelog 
 This fork is based in **PRESTO 5.0.3**
 
-## v1.2
+## v1.2 (To be Published)
 - Added `-sp` flag to `iqfits2dat.py`. This flag adds some IQUEYE constant values in the `.inf` file for the single pulse search routine of PRESTO.
+- Added `concat_iqfits2dat.py`. This command allows to converts multiple `.fits` into one single `.dat`.
+- Fixed `iqfits2dat.py` temporal folder overwriting if multiple instances of this command run at the same time.
+- Added PS1 format for docker command prompt.
+- Added `-m` flag to `get_TOAs.py` to force a `.inf` due to some bug of the command not being able to find the corresponding file.
+- Minor changes and code cleaning.
+- Recompiled and pushed docker image.
 
 ## v1.1
 - Added TEMPO2 system wide.
