@@ -64,7 +64,10 @@ usage:  get_TOAs.py [options which must include -t or -g] pfd_file
                                        or, if the arg is a string, read the file
                                        to get multiple-gaussian parameters
   [-m, --inffile]                  : Provide path to inf file. If not provided
-                                       will try to find for it with filename.
+                                       will try to find for it with filename. 
+  [-c, --center_template]            : Centers the template max value in the bin 0. 
+                                        (i.e. rotates teh template). If -c is active
+                                        -r is active by default.
   [-t templateprof, --template=prof] : The template .bestprof file to use
   [-k subs_list, --kill=subs_list]   : List of subbands to ignore
   [-i ints_list, --kints=ints_list]  : List of intervals to ignore
@@ -111,7 +114,7 @@ if __name__ == '__main__':
         opts, args = getopt.getopt(sys.argv[1:], "herfp2s:n:d:g:t:o:k:i:m:",
                                    ["help", "event", "norotate", "FFTFITouts", "phase",
                                     "tempo2","subbands=", "numtoas=", "dm=", "gaussian=",
-                                    "template=", "offset=", "kill=", "kints=", "inffile="])
+                                    "template=", "offset=", "kill=", "kints=", "inffile=", "center_template="])
                                     
     except getopt.GetoptError:
         # print help information and exit:
@@ -170,6 +173,9 @@ if __name__ == '__main__':
             templatefilenm = a
         if o in ("-m", "--inffile"):
             inffilepath = a
+        if o in ("-c", "--center_template"):
+            center_template = True
+            rotate_prof = False
         if o in ("-o", "--offset"):
             offset = float(a)
         if o in ("-k", "--kill"):
@@ -279,6 +285,12 @@ if __name__ == '__main__':
         else:
             template = psr_utils.gaussian_profile(fold_pfd.proflen, 0.0, gaussianwidth)
         template = template / max(template)
+    
+    # Center template - rotate so maximum value is at bin 0
+    if center_template:
+        max_idx = Num.argmax(template)
+        template = Num.roll(template, -max_idx)
+    
     #from Pgplot import *
     #plotxy(template)
     #closeplot()
