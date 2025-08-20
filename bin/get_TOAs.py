@@ -111,10 +111,10 @@ usage:  get_TOAs.py [options which must include -t or -g] pfd_file
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "herfp2s:n:d:g:t:o:k:i:m:",
-                                   ["help", "event", "norotate", "FFTFITouts", "phase",
+        opts, args = getopt.getopt(sys.argv[1:], "herfp2cs:n:d:g:t:o:k:i:m:",
+                                   ["help", "event", "norotate", "center_template", "FFTFITouts", "phase",
                                     "tempo2","subbands=", "numtoas=", "dm=", "gaussian=",
-                                    "template=", "offset=", "kill=", "kints=", "inffile=", "center_template="])
+                                    "template=", "offset=", "kill=", "kints=", "inffile="])
                                     
     except getopt.GetoptError:
         # print help information and exit:
@@ -136,6 +136,7 @@ if __name__ == '__main__':
     offset = 0.0
     events = 0
     inffilepath = False
+    center_template = False
     t2format = False
     kill = []
     kints = []
