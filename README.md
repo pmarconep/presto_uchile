@@ -6,7 +6,7 @@ PRESTO is a large suite of pulsar search and analysis software developed primari
 
 ## About this fork
 
-This fork is based on **PRESTO 5.0.3**. This brings some modifications so all the software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
+This fork is based on **PRESTO 5.1.0**. This brings some modifications so all the software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
 
 ### Extra functions
 - Gemini South, ARO and IAR telescopes added.
@@ -34,10 +34,10 @@ If you need to process them, you can either checkout the "classic" branch of PRE
 
 The software is composed of numerous routines designed to handle three main areas of pulsar analysis:
 
-1. Data Preparation: Interference detection (`rfifind`) and removal (`zapbirds`), de-dispersion (`prepdata`, `prepsubband`, and `mpiprepsubband`), barycentering (via TEMPO).
+1. Data Preparation: Interference detection (`rfifind`) and removal (`zapbirds` and `pfdzap.py`), de-dispersion (`prepdata`, `prepsubband`, and `mpiprepsubband`), barycentering (via TEMPO).
 2. Searching: Fourier-domain acceleration and jerk (`accelsearch`), single-pulse (`single_pulse_search.py`), and phase-modulation or sideband searches (`search_bin`).
-3. Folding: Candidate optimization (`prepfold`) and Time-of-Arrival (TOA) generation (`get_TOAs.py`).
-4. Misc: Data exploration (`readfile`, `exploredat`, `explorefft`), de-dispersion planning (`DDplan.py`), date conversion (`mjd2cal`, `cal2mjd`), tons of python pulsar/astro libraries, average pulse creation, flux density estimation, and more...
+3. Folding: Candidate optimization (`prepfold` and `fourier_fold.py`) and Time-of-Arrival (TOA) generation (`get_TOAs.py`).
+4. Misc: Data exploration (`readfile`, `exploredat`, `explorefft`), de-dispersion planning (`DDplan.py`), date conversion (`mjd2cal`, `cal2mjd`), tons of python pulsar/astro libraries, average pulse creation and flux density estimation (`sum_profiles.py`), and more...
 5. Post Single Pulse Searching Tools: Grouping algorithm (`rrattrap.py`), Production and of single pulse diagnostic plots (`make_spd.py`, `plot_spd.py`, and `waterfaller.py`).
 
 Many additional utilities are provided for various tasks that are often required when working with pulsar data such as time conversions, Fourier transforms, time series and FFT exploration, byte-swapping, etc.
