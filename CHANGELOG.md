@@ -1,5 +1,5 @@
 # PRESTO - Gemini South Changelog 
-This fork is based in **PRESTO 5.0.3**
+This fork is based in **PRESTO 5.1.0**
 
 ## v1.2 (To be Published)
 - Added `concat_iqfits2dat.py`. This command allows to converts multiple `.fits` into one single `.dat`.
