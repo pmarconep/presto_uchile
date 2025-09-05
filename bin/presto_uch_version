@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+
+print("This is PRESTO Uchile for IQUEYE@Gemini South\n  PRESTO Uchile -- 1.2\n  PRESTO -- 5.1.0\nIf you pulled from the Docker:\n   TEMPO -- 13.103\n   TEMPO2 -- 2025.01.2\n   PSRCHIVE -- 2025-08-21\n\nNote: If you build your own docker image, the doker file will take the latest versions of each software.")
