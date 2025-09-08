@@ -209,7 +209,7 @@ RUN echo '\n# --- PSR software environment ---' >> /root/.bashrc && \
     echo 'export TEMPO2=/usr/share/tempo2/' >>  /root/.bashrc && \
     echo 'export PATH=$PSRHOME/tempo2/bin:$PATH' >> /root/.bashrc && \
     echo 'export PATH=$PSRHOME/psrchive/bin:$PATH' >> /root/.bashrc && \
-    echo "export PS1='\[\e[93m\](\[\e[1m\]\!\[\e[22m\])\[\e[0;1m\] \[\e[38;5;124m\]presto_dock:\[\e[38;5;70m\]\w\[\e[38;5;39m\]\$\[\e[0m\]'" >> /root/.bashrc
+    echo "export PS1='\[\e[93m\](\[\e[1m\]\!\[\e[22m\])\[\e[0;1m\] \[\e[38;5;124m\]presto_dock:\[\e[38;5;70m\]\w\[\e[38;5;39m\]\$\[\e[0m\] '" >> /root/.bashrc
 
 
 WORKDIR ${PSRHOME}
