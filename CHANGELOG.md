@@ -1,7 +1,7 @@
 # PRESTO - Gemini South Changelog 
 This fork is based in **PRESTO 5.1.0**
 
-## v1.2 (To be Published)
+## v1.2
 - Added `concat_iqfits2dat.py`. This command allows to converts multiple `.fits` into one single `.dat`.
 - Added `-sp` flag to `iqfits2dat.py`. This flag adds some IQUEYE constant values in the `.inf` file for the single pulse search routine of PRESTO.
 - Added `-c` flag to `get_TOAs.py`. This option centers the max value of the template at bin 0. This flags forces the `-r` flag.
