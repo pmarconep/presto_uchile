@@ -34,7 +34,8 @@ scopes2 = {'GBT':'gbt',
           'Gemini-S': 'gs',
           'CPT': 'cpt',
           'ARO': 'aro',
-          'IAR': 'iar1'}
+          'IAR1': 'iar1',
+          'IAR2': 'iar2'} #creo que modifique la key de este valor para que funcionara con mi PRESTO
 
 def measure_phase(profile, template, rotate_prof=True):
     """
@@ -299,6 +300,7 @@ if __name__ == '__main__':
     if (not fold.topo):
         obs = '@'  # Solarsystem Barycenter
     else:
+        obs = 'aro' #hardcoded as default because AROs .fil have hardcoded the Arecibo telescope, as it is not in PSRFITS default configs...
         try: 
             if t2format:
                 obs = scopes2[fold_pfd.telescope.split()[0]]
