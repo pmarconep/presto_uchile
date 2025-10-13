@@ -1,6 +1,11 @@
 # PRESTO - Gemini South Changelog 
 This fork is based in **PRESTO 5.1.0**
 
+## v1.2.1
+- Added IAR1, IAR2, IAR1R and IAR2R to TEMPO, TEMPO2 and PRESTO.
+- Made the default option to NOT barycenter in `iqfits2dat.py`
+- Minor fixes and changes.
+
 ## v1.2
 - Added `concat_iqfits2dat.py`. This command allows to converts multiple `.fits` into one single `.dat`.
 - Added `-sp` flag to `iqfits2dat.py`. This flag adds some IQUEYE constant values in the `.inf` file for the single pulse search routine of PRESTO.
