@@ -125,9 +125,6 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
     } else if (strcmp(idata->telescope, "LOFAR") == 0) {
         scopechar = 't';
         tracklen = 12;
-    } else if (strcmp(idata->telescope, "WSRT") == 0) {
-        scopechar = 'i';
-        tracklen = 12;
     } else if (strcmp(idata->telescope, "FAST") == 0) {
         scopechar = 'k';
         tracklen = 5;
@@ -140,17 +137,26 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
     } else if (strcmp(idata->telescope, "MWA") == 0) {
         scopechar = 'u';
         tracklen = 12;
-    } else if (strcmp(idata->telescope, "LWA") == 0) {
-        scopechar = 'x';
-        tracklen = 12;
     } else if (strcmp(idata->telescope, "SRT") == 0) {
         scopechar = 'z';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "MeerKAT") == 0) {
         scopechar = 'm';
         tracklen = 12;
-    } else if (strcmp(idata->telescope, "KAT-7") == 0) {
+    } else if (strcmp(idata->telescope, "Gemini-S") == 0) {
+        scopechar = 'x';
+        tracklen = 12;
+    } else if (strcmp(idata->telescope, "CPT") == 0) {
         scopechar = 'k';
+        tracklen = 12;
+    } else if (strcmp(idata->telescope, "ARO") == 0) {
+        scopechar = 'm';
+        tracklen = 12;
+    } else if (strcmp(idata->telescope, "IAR1") == 0) {
+        scopechar = 'a';
+        tracklen = 12;
+    } else if (strcmp(idata->telescope, "IAR2") == 0) {
+        scopechar = 'b';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "Geocenter") == 0) {
         scopechar = 'o';

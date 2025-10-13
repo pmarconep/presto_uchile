@@ -272,6 +272,21 @@ void telescope_to_tempocode(char *inname, char *outname, char *obscode)
     } else if (strcmp(scope, "meerkat") == 0 ) {
         strcpy(obscode, "MK");
         strcpy(outname, "MeerKAT");
+    } else if (strcmp(scope, "gemini-s") == 0) {
+        strcpy(obscode, "GS");
+        strcpy(outname, "Gemini-S");
+    } else if (strcmp(scope, "cpt") == 0) {
+        strcpy(obscode, "CP");
+        strcpy(outname, "CPT");
+    } else if (strcmp(scope, "aro") == 0) {
+        strcpy(obscode, "AO");
+        strcpy(outname, "ARO");
+    } else if (strcmp(scope, "iar1") == 0) {
+        strcpy(obscode, "IAR1");
+        strcpy(outname, "IAR1");
+    } else if (strcmp(scope, "iar2") == 0) {
+        strcpy(obscode, "IAR2");
+        strcpy(outname, "IAR2");
     } else if (strcmp(scope, "ata") == 0) {
         strcpy(obscode, "AT");
         strcpy(outname, "ATA");

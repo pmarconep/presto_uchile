@@ -130,22 +130,6 @@ WORKDIR $PSRHOME
 
 RUN git clone https://github.com/pmarconep/presto_uchile.git presto5
 
-#GeminiS
-RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "gemini-s") == 0 ) {\n        strcpy(obscode, "GS");\n        strcpy(outname, "Gemini-S");' presto5/src/misc_utils.c
-RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "Gemini-S") == 0) {\n        scopechar = '\''x'\'';\n        tracklen = 12;/' presto5/src/polycos.c
-
-#CPT
-RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "cpt") == 0 ) {\n        strcpy(obscode, "CP");\n        strcpy(outname, "CPT");' presto5/src/misc_utils.c
-RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "CPT") == 0) {\n        scopechar = '\''k'\'';\n        tracklen = 12;/' presto5/src/polycos.c
-
-#ARO
-RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "aro") == 0 ) {\n        strcpy(obscode, "AO");\n        strcpy(outname, "ARO");' presto5/src/misc_utils.c
-RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "ARO") == 0) {\n        scopechar = '\''i'\'';\n        tracklen = 12;/' presto5/src/polycos.c
-
-#IAR
-RUN sed -i '/strcpy(outname, "MeerKAT");/a\    } else if (strcmp(scope, "iar") == 0 ) {\n        strcpy(obscode, "AR");\n        strcpy(outname, "IAR");' presto5/src/misc_utils.c
-RUN sed -i '/strcmp(idata->telescope, "MeerKAT") == 0/,+2 s/tracklen = 12;/tracklen = 12;\n    } else if (strcmp(idata->telescope, "IAR") == 0) {\n        scopechar = '\''a'\'';\n        tracklen = 12;/' presto5/src/polycos.c
-
 WORKDIR $PSRHOME/presto5
 
 ENV PGPLOT_DIR="/usr/lib/pgplot5" \
