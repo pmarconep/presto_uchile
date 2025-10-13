@@ -50,10 +50,10 @@ RUN echo "     882589.289   -4924872.368      3943729.4  1  GBT                 
     && echo "   -4554231.500    2816759.100     -3454036.3  1  PARKES              7  PK" >> tempo/obsys.dat \
     && echo "    3822626.040    -154105.650      5086486.0  1  JODRELL             8  JB" >> tempo/obsys.dat \
     && echo "     382546.300     795056.360          893.7  0  GB                  9  G3" >> tempo/obsys.dat \
-    && echo "    2765340.450   -4449597.550     -3625779.1  1  IAR                 a  AR" >> tempo/obsys.dat \
-    && echo "     382545.900     795036.870          835.8  0  GB                  b  G8" >> tempo/obsys.dat \
-    && echo "     340443.497    1073703.819         2124.0  0  VLA                 c  V2" >> tempo/obsys.dat \
-    && echo "     443118.480    -113848.480           25.0  0  NORTHERN            d  BO" >> tempo/obsys.dat \
+    && echo "    2765357.08    -4449628.98      -3625726.47 1  IAR1                a  AR" >> tempo/obsys.dat \
+    && echo "    2765322.49    -4449569.52      -3625825.14 0  IAR2                b  G8" >> tempo/obsys.dat \
+    && echo "    2765357.08    -4449628.98      -3625726.47 0  IAR1R               c  V2" >> tempo/obsys.dat \
+    && echo "    2765322.49    -4449569.52      -3625825.14 0  IAR2R               d  BO" >> tempo/obsys.dat \
     && echo "   -4483311.640    2648815.920     -3671909.3  1  MOST                e  MO" >> tempo/obsys.dat \
     && echo "    4324165.810     165927.110      4670132.8  1  Nancay              f  NC" >> tempo/obsys.dat \
     && echo "    4033949.500     486989.400      4900430.8  1  Effels              g  EF" >> tempo/obsys.dat \
