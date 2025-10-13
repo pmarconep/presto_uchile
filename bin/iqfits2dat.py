@@ -322,7 +322,7 @@ def main(args):
     print('\r    Converting to .dat file...                       ', end='')
     cmd(f'toas2dat -n {pts} -t0 {t0} -dt {args.bin_time} -o {file_path}.dat {file_path}.events')
     
-    if not args.no_bary:
+    if args.bary:
         if h1['BARIC'] == 'NO':
             print('\r    Barycentering .dat file...                       ', end='')
             cmd(f'prepdata -o {final_path + '_bary'} {file_path}.dat')
@@ -365,7 +365,7 @@ if __name__ == "__main__":
     parser.add_argument('-dm', '--dm', required=False, help='Needed for -sp. Default:0')
     parser.add_argument('-ra', '--ra', required=False, help='Right Ascension (RA) of the pulsar ex: 12:31:11.307')
     parser.add_argument('-dec', '--dec', required=False, help='Declination (DEC) of the pulsar ex: -45:10:35.15')
-    parser.add_argument('-nobary', '--no_bary', action='store_true', help='Do not barycenter the data')
+    parser.add_argument('-bary', '--bary', action='store_true', help='Barycenter the data')
     parser.add_argument('--pulsar_name', required=False, help='Pulsar name (e.g., crab, geminga, vela)')
     parser.add_argument('--name', required=False, help='Name to use in PRESTO logs. Default value is "Astrolab"')
     parser.add_argument('input_file', help='Path to input .fits file')
