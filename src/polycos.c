@@ -158,6 +158,12 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
     } else if (strcmp(idata->telescope, "IAR2") == 0) {
         scopechar = 'b';
         tracklen = 12;
+    } else if (strcmp(idata->telescope, "IAR1R") == 0) {
+        scopechar = 'c';
+        tracklen = 12;
+    } else if (strcmp(idata->telescope, "IAR2R") == 0) {
+        scopechar = 'd';
+        tracklen = 12;
     } else if (strcmp(idata->telescope, "Geocenter") == 0) {
         scopechar = 'o';
         tracklen = 12;
