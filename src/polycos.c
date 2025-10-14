@@ -93,6 +93,8 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
     chdir(tmpdir);
 
     /* Write tz.in */
+    fprintf("\nDetecting telescope:'%s'\n", idata->telescope);
+
     if (strcmp(idata->telescope, "GBT") == 0) {
         scopechar = '1';
         tracklen = 12;
@@ -168,8 +170,8 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
         scopechar = 'o';
         tracklen = 12;
     } else {                    /*  Barycenter */
-        printf("Defaulting to barycenter for polyco generation...\n");
-        scopechar = '@';
+        printf("Defaulting to barycenter for polyco generation...\n"); /*defaulting to IAR1 for simplicity*/
+        scopechar = 'a';
         tracklen = 12;
     }
     /* For optical, X-ray, or gamma-ray data */
