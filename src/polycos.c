@@ -170,7 +170,7 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
         scopechar = 'o';
         tracklen = 12;
     } else {                    /*  Barycenter */
-        printf("Defaulting to barycenter for polyco generation...\n"); /*defaulting to IAR1 for simplicity*/
+        printf("Defaulting to IAR1 for polyco generation...\n"); /*defaulting to IAR1 for simplicity*/
         scopechar = 'a';
         tracklen = 12;
     }
