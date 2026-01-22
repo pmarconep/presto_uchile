@@ -124,6 +124,10 @@ void get_telescope_name(int telescope_id, struct spectra_info *s)
         strcpy(s->telescope, "VLA");
         s->beam_FWHM = default_beam;
         break;
+    case 19:
+        strcpy(s->telescope, "IAR1");
+        s->beam_FWHM = 2.0 / 3600.0 * beam_halfwidth(s->fctr, 30.0); // A1 has 30m in diameter
+        break;
     case 20:  // May need to change....
         strcpy(s->telescope, "CHIME");
         s->beam_FWHM = 2.0 / 3600.0 * beam_halfwidth(s->fctr, 20.0);

@@ -7,7 +7,7 @@ char bands[NUMBANDS][40] = { "Radio", "IR", "Optical", "UV", "X-ray", "Gamma" };
 
 char scopes[NUMSCOPES][40] =
     { "None (Artificial Data Set)", "Arecibo", "Parkes", "VLA",
-    "MMT", "Las Campanas 2.5m", "Mt. Hopkins 48in", "Other"
+    "MMT", "Las Campanas 2.5m", "Mt. Hopkins 48in", "Other", "IAR1"
 };
 
 void add_to_inf_epoch(infodata * data, double seconds)
