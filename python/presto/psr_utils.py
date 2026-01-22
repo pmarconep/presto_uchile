@@ -1438,7 +1438,7 @@ def expcos_profile(N, phase, fwhm):
         return norm * (np.exp(k * np.cos(phsval + phi)) - np.exp(-k))
 
 
-def read_gaussfitfile(gaussfitfile, proflen):
+def read_gaussfitfile(gaussfitfile, proflen, rotate_prof):
     """
     read_gaussfitfile(gaussfitfile, proflen):
         Read a Gaussian-fit file as created by the output of pygaussfit.py.
@@ -1471,10 +1471,13 @@ def read_gaussfitfile(gaussfitfile, proflen):
     ampls = np.take(ampls, new_order)
     phass = np.take(phass, new_order)
     fwhms = np.take(fwhms, new_order)
-    # Now put the biggest gaussian at phase = 0.0
-    phass = phass - phass[0]
-    phass = np.where(phass < 0.0, phass + 1.0, phass)
-    template = np.zeros(proflen, dtype="d")
+
+    if rotate_prof:
+        # Now put the biggest gaussian at phase = 0.0
+        phass = phass - phass[0]
+        phass = np.where(phass < 0.0, phass + 1.0, phass)
+    
+    template = np.zeros(proflen, dtype="d")    
     for ii in range(len(ampls)):
         template += ampls[ii] * gaussian_profile(proflen, phass[ii], fwhms[ii])
     return template
