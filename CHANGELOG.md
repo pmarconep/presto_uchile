@@ -1,6 +1,11 @@
 # PRESTO - Gemini South Changelog 
 This fork is based in **PRESTO 5.2.0.dev**
 
+## v1.3
+- Merged with PRESTO 5.2.0.dev (02-04-2026)
+- Added IAR1 for folding.
+- Minor fixes
+
 ## v1.2.1
 - Added IAR1, IAR2, IAR1R and IAR2R to TEMPO, TEMPO2 and PRESTO.
 - Made the default option to NOT barycenter in `iqfits2dat.py`
