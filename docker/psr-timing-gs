@@ -8,7 +8,7 @@ RUN apt-get update &&\
     git \   
     ca-certificates
 
-RUN apt install -y git firefox openssh-server xauth build-essential libfftw3-bin libfftw3-dev libgsl28 libgsl-dev pgplot5 libglib2.0-dev libcfitsio-bin libcfitsio-dev libpng-dev gfortran tcsh autoconf libx11-dev python3-dev python3-numpy python3-pip python3-venv emacs nano vim rsync less
+RUN apt install -y git firefox openssh-server xauth build-essential libfftw3-bin libfftw3-dev libgsl27 libgsl-dev pgplot5 libglib2.0-dev libcfitsio-bin libcfitsio-dev libpng-dev gfortran tcsh autoconf libx11-dev python3-dev python3-numpy python3-pip python3-venv emacs nano vim rsync less
 
 RUN apt-get install -y libtool python3-tk
 
