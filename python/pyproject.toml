@@ -4,7 +4,7 @@ requires = ['meson-python', 'numpy']
 
 [project]
 name = 'presto'
-version = '5.1.0'
+version = '5.2.0.dev10'
 description = 'PulsaR Exploration and Search TOolkit'
 requires-python = '>=3.9'
 dependencies = ['numpy', 'scipy', 'astropy', 'matplotlib']
@@ -16,7 +16,7 @@ authors = [
 "Source" = "https://github.com/scottransom/presto"
 "ASCL" = "https://ascl.net/1107.017"
 
-[tool.pixi.project]
+[tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64"]
 

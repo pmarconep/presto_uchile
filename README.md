@@ -6,7 +6,7 @@ PRESTO is a large suite of pulsar search and analysis software developed primari
 
 ## About this fork
 
-This fork is based on **PRESTO 5.1.0**. This brings some modifications so all the software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
+This fork is based on **PRESTO 5.2.0**. This brings some modifications so all the software works with Gemini South and IQUEYE data. Plus, some scripts for treating some particulars about IQUEYE data.
 
 ### Extra functions
 - Gemini South, ARO and IAR telescopes added.
@@ -14,6 +14,12 @@ This fork is based on **PRESTO 5.1.0**. This brings some modifications so all th
 
 ### Extra commands
 - **fits2dat.py**: This can transform *.fits* to *.dat* baricentering in the process.
+
+## Version 5.2.0:
+ * Now require GSL (Gnu Scientific Library) to be installed. This library is thread-safe and allows us to more easily parallelize routines.
+ * Large set of changes that updated K&R-style declarations so that they would compile with GCC v15. These changes were made by Claude Code(!) with the prompting by Paul Ray. Thanks, Paul and Claude!
+
+For information on older versions, please see the [CHANGELOG.md](https://github.com/scottransom/presto/blob/master/CHANGELOG.md).
 
 ## About PRESTO:
 PRESTO is written with portability, ease-of-use, and memory efficiency in mind, it can currently handle raw data from the following pulsar machines or formats:
@@ -51,7 +57,7 @@ Many additional utilities are provided for various tasks that are often required
 ## Getting it: 
 The PRESTO source code is released under the GPL and can be browsed or gotten from here in many different ways (including zipped or tar'd or via git). If you are too lazy to read how to get it but have git on your system do:
 
-    git clone git://github.com/scottransom/presto.git
+    git clone https://github.com/scottransom/presto.git
 
 To update it on a regular basis do
 
@@ -64,7 +70,7 @@ For more detailed installation instructions, see [INSTALL.md](https://github.com
 
 If you want the "classic" branch, do the following:
 
-    git clone git://github.com/scottransom/presto.git
+    git clone https://github.com/scottransom/presto.git
     cd presto
     git checkout -b classic origin/classic
 

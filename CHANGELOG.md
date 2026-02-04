@@ -1,5 +1,5 @@
 # PRESTO - Gemini South Changelog 
-This fork is based in **PRESTO 5.1.0**
+This fork is based in **PRESTO 5.2.0.dev**
 
 ## v1.2.1
 - Added IAR1, IAR2, IAR1R and IAR2R to TEMPO, TEMPO2 and PRESTO.

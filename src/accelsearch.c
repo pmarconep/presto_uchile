@@ -137,9 +137,9 @@ int main(int argc, char *argv[])
     }
 
     /* Function pointers to make code a bit cleaner */
-    void (*fund_to_ffdot)() = NULL;
-    void (*add_subharm)() = NULL;
-    void (*inmem_add_subharm)() = NULL;
+    void (*fund_to_ffdot)(ffdotpows *, accelobs *) = NULL;
+    void (*add_subharm)(ffdotpows *, ffdotpows *, int, int) = NULL;
+    void (*inmem_add_subharm)(ffdotpows *, accelobs *, int, int) = NULL;
     if (obs.inmem) {
         if (cmd->otheroptP) {
             fund_to_ffdot = &fund_to_ffdotplane_trans;
@@ -270,7 +270,6 @@ int main(int argc, char *argv[])
                 props[ii].werr = (float) (ACCEL_DW) / cand->numharm;
                 listptr = listptr->next;
             }
-
             /* Write the fundamentals to the output text file */
             output_fundamentals(props, cands, &obs, &idata);
 

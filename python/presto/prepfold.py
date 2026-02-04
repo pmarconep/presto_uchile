@@ -11,9 +11,8 @@ from presto.presto import chi2_sigma
 
 
 class pfd(object):
-    def __init__(self, filename, inffilepath = False):
+    def __init__(self, filename):
         self.pfd_filename = filename
-        self.inffilepath = inffilepath
         infile = open(filename, "rb")
         # See if the .bestprof file is around
         try:
