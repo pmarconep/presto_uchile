@@ -11,7 +11,7 @@ from presto.presto import chi2_sigma
 
 
 class pfd(object):
-    def __init__(self, filename):
+    def __init__(self, filename, inffilepath = False):
         self.pfd_filename = filename
         infile = open(filename, "rb")
         # See if the .bestprof file is around
@@ -171,9 +171,12 @@ class pfd(object):
             self.profs = np.reshape(self.profs, (self.npart, self.nsub, self.proflen))
         if self.numchan == 1:
             try:
-                idata = infodata.infodata(
-                    self.filenm[: self.filenm.rfind(b".")] + b".inf"
-                )
+                if not inffilepath == False:
+                    idata = infodata.infodata(inffilepath)
+                else:
+                    idata = infodata.infodata(
+                        self.filenm[: self.filenm.rfind(b".")] + b".inf"
+                    )
                 try:
                     if idata.waveband == "Radio":
                         self.bestdm = idata.DM
