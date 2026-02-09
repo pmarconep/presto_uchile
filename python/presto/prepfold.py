@@ -185,7 +185,7 @@ class pfd(object):
                     self.bestdm = 0.0
                     self.numchan = 1
             except IOError:
-                print("Warning!  Can't open the .inf file for " + filename + "!")
+                print("Warning!  Can't open the .inf file for " + filename + "!" + self.filenm[: self.filenm.rfind(b".")] + b".inf")
         self.binspersec = self.fold_p1 * self.proflen
         self.chanpersub = self.numchan // self.nsub
         self.subdeltafreq = self.chan_wid * self.chanpersub
