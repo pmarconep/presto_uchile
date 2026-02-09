@@ -196,7 +196,7 @@ if __name__ == '__main__':
                     kints.append(int(ints))
 
     # Read the prepfold output file and the binary profiles
-    fold_pfd = pfd(sys.argv[-1], inffilepath = inffilepath)
+    fold_pfd = pfd(sys.argv[-1])
 
     # Check to make sure we can use this .pfd for timing purposes
     if not fold_pfd.use_for_timing():
