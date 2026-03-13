@@ -1,4 +1,19 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+"""
+Concatenate PRESTO .dat Files
+
+This script concatenates multiple IQUEYE .fit files into a single PRESTO .dat time series.
+
+Author: Pascual Marcone
+Version: 1.0.0
+Date: 14th August 2025
+"""
+
+__version__ = "1.0.0"
+__author__ = "Pascual Marcone"
+__email__ = "pascual.marcone@ug.uchile.cl"
+
 import subprocess
 import shlex
 import os
@@ -10,38 +25,16 @@ import shutil
 import argparse
 import uuid
 
-def usage():
-    sys.stderr.write("""
-usage: fits2dat.py -t TEMPLATE.inf -o OUTPUT_DIR -dt BIN_TIME [options] INPUT_FILE
-
-Options:
-  -h, --help                : Display help message and exit
-  -t, --template TEMPLATE   : Path to the template .inf file (required)
-  -o, --output_dir DIR      : Output directory for barycentered data (required)
-  -dt, --bin_time BIN_TIME  : Bin time wanted for the pulsar (required)
-  -sp, --singlepulse        : Add useful .inf file entries for PRESTO single pulse search routine
-  -ra, --ra RA              : Right Ascension (RA) of the pulsar (e.g., 12:31:11.307)
-  -dec, --dec DEC           : Declination (DEC) of the pulsar (e.g., -45:10:35.15)
-  -nobary, --no_bary        : Do not barycenter the data
-  --name NAME               : Name to use in PRESTO logs (default: "Astrolab")
-  INPUT_FILE                : Path to input .fits file (required)
-
-Description:
-  Converts IQUEYE FITS files to PRESTO .dat format, optionally barycentering the data.
-  The script extracts time events from the FITS file, writes an events file, creates
-  and updates a PRESTO .inf file, and generates a .dat file. If barycentering is not
-  disabled and the FITS file is not already barycentered, it will barycenter the .dat
-  file using PRESTO's prepdata.
-
-Examples:
-  fits2dat.py -t template.inf -o ./output -dt 0.001 --name "Pascual Marcone" data/psrj1231_20220101.fits
-  fits2dat.py -t template.inf -o ./output -dt 0.001 -ra 12:31:11.307 -dec -14:11:43.63 data/psrj1231_20220101.fits
-
-Notes:
-  - If RA and DEC are not provided, the script will attempt to look them up for known pulsars at IQUEYE run.
-  - The output files will be placed in the specified output directory.
-  - Temporary files are cleaned up automatically.
-""")
+radec_dict = {
+    "crab": {"ra": "05:34:31.947", "dec": "22:00:52.15"},
+    "geminga": {"ra": "06:33:54.153", "dec": "17:46:12.91"},
+    "vela": {"ra": "08:35:20.655", "dec": "-45:10:35.15"},
+    "psrj1227": {"ra": "12:27:58.748", "dec": "-48:53:42.82"},
+    "psrj1023": {"ra": "10:23:47.684", "dec": "00:38:41.01"},
+    "psrj0540": {"ra": "05:40:11.2", "dec": "-69:19:54.20"},
+    "psrj1823": {"ra": "18:23:40.484", "dec": "-30:21:39.92"},
+    "psrj1231": {"ra": "12:31:11.307", "dec": "-14:11:43.63"}
+}
 
 def cmd(command):
     try:
@@ -142,50 +135,9 @@ def modify_inf_line(file_path, line_number, new_value):
         print(f"Error modifying .inf file: {e}")
         return False
 
-def add_inf_line_below(file_path, line_number, new_line):
-    """
-    Add a new line below a specific line in a PRESTO .inf file
-    
-    Args:
-        file_path: Path to the .inf file
-        line_number: The line number after which to add the new line (1-based indexing)
-        new_line: The new line to add (should include newline character if needed)
-        
-    Returns:
-        bool: True if addition was successful, False otherwise
-    """
-    try:
-        # Read the file content
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-        
-        # Check if the line number is valid
-        if line_number < 1 or line_number > len(lines):
-            print(f"Invalid line number {line_number}. File has {len(lines)} lines.")
-            return False
-            
-        # Ensure the new line ends with a newline character if it doesn't already
-        if not new_line.endswith('\n'):
-            new_line += '\n'
-            
-        # Insert the new line after the specified line number
-        # line_number is 1-based, so we insert at line_number index (0-based)
-        lines.insert(line_number, new_line)
-            
-        # Write the modified content back to the file
-        with open(file_path, 'w') as file:
-            file.writelines(lines)
-            
-        # print(f"Successfully added line '{new_line.strip()}' below line {line_number} in {file_path}")
-        return True
-        
-    except Exception as e:
-        print(f"Error adding line to .inf file: {e}")
-        return False
-
-def update_inf(file_dir, filename, bin_time, t0, pts, target, ra, dec, analyzed_by, bary):
+def update_inf(file_dir, filename, bin_time, t0, pts, target, ra, dec, analyzed_by, bary, template):
    
-    copy_inf_file(args.template, file_dir, new_name=filename)
+    copy_inf_file(template, file_dir, new_name=filename)
     
     inf_path = os.path.join(file_dir, filename + '.inf')
     
@@ -222,61 +174,104 @@ def update_inf(file_dir, filename, bin_time, t0, pts, target, ra, dec, analyzed_
     
     return 0
 
-radec_dict = {
-    "crab": {"ra": "05:34:31.947", "dec": "22:00:52.15"},
-    "geminga": {"ra": "06:33:54.153", "dec": "17:46:12.91"},
-    "vela": {"ra": "08:35:20.655", "dec": "-45:10:35.15"},
-    "psrj1227": {"ra": "12:27:58.748", "dec": "-48:53:42.82"},
-    "psrj1023": {"ra": "10:23:47.684", "dec": "00:38:41.01"},
-    "psrj0540": {"ra": "05:40:11.2", "dec": "-69:19:54.20"},
-    "psrj1823": {"ra": "18:23:40.484", "dec": "-30:21:39.92"},
-    "psrj1231": {"ra": "12:31:11.307", "dec": "-14:11:43.63"}
-}
-
-def main(args):
-
+def main() -> None:
+    """
+    Main function to handle command-line interface and orchestrate concatenation.
+    
+    Parses command-line arguments, validates inputs, and performs the 
+    concatenation of PRESTO .dat files.
+    """
+    parser = argparse.ArgumentParser(
+        description=f'Concatenate PRESTO .dat files (v{__version__})',
+        epilog="""
+        This tool concatenates multiple PRESTO .dat time series files into a single
+        file, handling temporal gaps by filling them with mean values and ensuring
+        the output has an optimal length for FFT processing.
+        
+        Example:
+            python concatenate_dat.py obs1.dat obs2.dat obs3.dat -o combined
+        """,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument('-t', '--template', required=True, 
+                        help='Path to the template .inf file')
+    
+    parser.add_argument('-dt', '--bin_time', required=True, 
+                        help='Bin time wanted for the pulsar')
+    
+    parser.add_argument('-o', '--output_dir', required=True,
+                       help='Output file path (without extension)')
+    
+    parser.add_argument('-ra', '--ra', required=False, 
+                        help='Right Ascension (RA) of the pulsar ex: 12:31:11.307')
+    
+    parser.add_argument('-dec', '--dec', required=False, 
+                        help='Declination (DEC) of the pulsar ex: -45:10:35.15')
+    
+    parser.add_argument('-bary', '--bary', action='store_true', 
+                        help='Do not barycenter the data')
+    
+    parser.add_argument('--pulsar_name', required=False, 
+                        help='Pulsar name (e.g., crab, geminga, vela)')
+    
+    parser.add_argument('--name', required=False, help='Name to use in PRESTO logs. Default value is "Astrolab"')
+    
+    parser.add_argument('--version', action='version', 
+                       version=f'concatenate_dat.py {__version__}')
+    
+    parser.add_argument('files', nargs='+', 
+                       help='Input .dat file paths to concatenate')
+    
+    
+    args = parser.parse_args()
+    
+    print(f"\nIQUEYE .fits Concatenation Tool v{__version__}")
+    print("=" * 50)
+    print(f"Input files: {len(args.files)}")
+    for i, file in enumerate(args.files, 2):
+        print(f"  {i + 1}. {file}")
+    print(f"Output: {args.output_dir}.dat")
+    print()
+    
+    # Validate input files exist
+    for file in args.files:
+        if not os.path.exists(file):
+            print(f"Error: Input file {file} not found")
+            sys.exit(1)
+            
+    # Parameters validations
+    
     if not args.name:
         args.name = "Astrolab"
-
-    if not args.dm:
-        args.dm = 0
     
-    #file managing and setup
-    temp_dir = pathlib.Path('/tmp')
-    temp_folder = temp_dir / "fits2dat_temp"
-    temp_folder.mkdir(parents=True, exist_ok=True)
-
-    # input file
-    fits_file = pathlib.Path(args.input_file)
-    
-    # pulsar name
-    # Try to get pulsar name from path or argument
     if args.pulsar_name:
         pulsar_name = args.pulsar_name
     else:
-        pulsar_name = str(fits_file).split('/')[-3]
+        pulsar_name = str(args.files[0]).split('/')[-3]
         if pulsar_name.lower() not in radec_dict:
-            print(f"\nError: Pulsar name '{pulsar_name}' not found in dictionary. Please provide --pulsar_name.")
+            print(f"\nError: Pulsar name '{pulsar_name}' not found in dictionary. Please provide --pulsar_name --ra and --dec.")
             sys.exit(1)
-
-    #random UUID
+            
+    # Setup before converting files
+        #temp directory creation
+    temp_dir = pathlib.Path('/tmp')
+    temp_folder = temp_dir / "concat_iqfits2dat.py"
+    temp_folder.mkdir(parents=True, exist_ok=True)
+    
+        # random id
     random_uuid = str(uuid.uuid4())
-
-    # Define filename
-    filename = random_uuid
-
-    # temp folder
+    
+        # temp folder
     temp_pulsar_name = random_uuid + pulsar_name
     pulsar_temp_folder = temp_folder / temp_pulsar_name
     pulsar_temp_folder.mkdir(parents=True, exist_ok=True)
     file_dir = str(pulsar_temp_folder) 
-    file_path = str(pulsar_temp_folder) + '/' + filename
+    file_path = str(pulsar_temp_folder) + '/' + random_uuid
     
-    # output dirs
-    final_dir = str(args.output_dir)
-    final_path = final_dir
-
-    #checking ra and dec
+        # final directories
+    final_path = str(args.output_dir)
+    
+        #checking ra and dec
     if args.ra and args.dec:
         ra = args.ra
         dec = args.dec
@@ -286,21 +281,47 @@ def main(args):
             sys.exit(1)
         ra = radec_dict[pulsar_name.lower()]['ra']
         dec = radec_dict[pulsar_name.lower()]['dec']
-        
-    print(f"Processing .fits file for {pulsar_name}")
     
-    #read .fits
-    a = fitsio.FITS(fits_file, "r")
-    h1 = a[1].read_header()
+    # order the files
+    epochs = []
     
-    # get TOAs
-    print('\r    Extracting time events...                         ', end='')
-    if "TRJDREF" not in h1:
-        MJDs = a[1].read_column("TIME") + float(h1["TMJDREF"])
-    else:
-        MJDs = a[1].read_column("TIME") + float(h1["TRJDREF"]) - 0.5
+    for file in args.files:
+        a = fitsio.FITS(file, "r")
+        h1 = a[1].read_header()
+        if "TRJDREF" not in h1:
+            epochs.append(a[1].read_column("TIME")[0] + float(h1["TMJDREF"]))
+        else:
+            epochs.append(a[1].read_column("TIME")[0] + float(h1["TRJDREF"]) - 0.5)
+
+    epochs = np.array(epochs)
+    sorted_indices = np.argsort(epochs)
+    args.files = np.array(args.files)[sorted_indices].tolist()
     
-    # os.makedirs(final_dir, exist_ok=True)
+    # reading and concatenating events
+    
+    i = 0
+    for file in args.files:
+        if i != 0:
+            a = fitsio.FITS(file, "r")
+            h1 = a[1].read_header()
+            
+            if "TRJDREF" not in h1:
+                MJDs = np.concatenate((MJDs, a[1].read_column("TIME") + float(h1["TMJDREF"])))
+            else:
+                MJDs = np.concatenate((MJDs, a[1].read_column("TIME") + float(h1["TRJDREF"]) - 0.5))
+        else:
+            a = fitsio.FITS(file, "r")
+            h1 = a[1].read_header()
+            
+            if "TRJDREF" not in h1:
+                MJDs = a[1].read_column("TIME") + float(h1["TMJDREF"])
+                
+            else:
+                MJDs = a[1].read_column("TIME") + float(h1["TRJDREF"]) - 0.5
+
+            i = 1
+            
+    print(f"Concatenated {MJDs.size} events...\n")
     
     # Status message
     print('\r    Writing events file...                           ', end='')
@@ -316,7 +337,7 @@ def main(args):
 
     # Status message
     print('\r    Creating and updating .inf file...               ', end='')
-    update_inf(file_dir, filename, args.bin_time, t0, pts, pulsar_name, ra, dec, args.name, bary)
+    update_inf(file_dir, random_uuid, args.bin_time, t0, pts, pulsar_name, ra, dec, args.name, bary, args.template)
     
     # Status message
     print('\r    Converting to .dat file...                       ', end='')
@@ -330,20 +351,8 @@ def main(args):
             print('\r    Data already barycentered... skipping                       ', end='')
             cmd(f'prepdata -o {final_path + '_bary'} -nobary {file_path}.dat')
     else:
-        print('\r    No barycentering requested... skipping                       ', end='')
+        print('\r    Prepping data...                       ', end='')
         cmd(f'prepdata -o {final_path} -nobary {file_path}.dat')
-
-    if args.singlepulse and args.no_bary:
-        add_inf_line_below(final_path + '.inf', 12, f' Dispersion measure (cm-3 pc)           =  {args.dm}')
-        add_inf_line_below(final_path + '.inf', 12, ' Central freq of low channel (MHz)      =  148710317.46031743')   #constant for IQU
-        add_inf_line_below(final_path + '.inf', 12, ' Number of channels                     =  1')                    #constant for IQU
-        add_inf_line_below(final_path + '.inf', 12, ' Channel bandwidth (MHz)                =  297420634.92063487')   #constant for IQU
-
-    else:
-        add_inf_line_below(final_path + '_bary.inf', 12, f' Dispersion measure (cm-3 pc)           =  {args.dm}')
-        add_inf_line_below(final_path + '_bary.inf', 12, ' Central freq of low channel (MHz)      =  148710317.46031743')   #constant for IQU
-        add_inf_line_below(final_path + '_bary.inf', 12, ' Number of channels                     =  1')                    #constant for IQU
-        add_inf_line_below(final_path + '_bary.inf', 12, ' Channel bandwidth (MHz)                =  297420634.92063487')   #constant for IQU
     
     print('\r    Done                                             ')
     print()
@@ -355,21 +364,6 @@ def main(args):
         print(f"Successfully removed temporary directory: {temp_folder}")
     except Exception as e:
         print(f"Error while removing temporary directory: {e}")
-
+            
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=" Converts IQUEYE FITS files to PRESTO .dat format, optionally barycentering the data.\nThe script extracts time events from the FITS file, writes an events file, creates and updates a PRESTO .inf file, and generates a .dat file. \nIf barycentering is not disabled and the FITS file is not already barycentered, it will barycenter the .dat file using PRESTO's prepdata.")
-    parser.add_argument('-t', '--template', required=True, help='Path to the template .inf file')
-    parser.add_argument('-o', '--output_dir', required=True, help='Output directory for barycentered data')
-    parser.add_argument('-dt', '--bin_time', required=True, help='Bin time wanted for the pulsar')
-    parser.add_argument('-sp', '--singlepulse', action='store_true', help= 'Add useful .inf file entries for PRESTO single pulse search routine')
-    parser.add_argument('-dm', '--dm', required=False, help='Needed for -sp. Default:0')
-    parser.add_argument('-ra', '--ra', required=False, help='Right Ascension (RA) of the pulsar ex: 12:31:11.307')
-    parser.add_argument('-dec', '--dec', required=False, help='Declination (DEC) of the pulsar ex: -45:10:35.15')
-    parser.add_argument('-bary', '--bary', action='store_true', help='Barycenter the data')
-    parser.add_argument('--pulsar_name', required=False, help='Pulsar name (e.g., crab, geminga, vela)')
-    parser.add_argument('--name', required=False, help='Name to use in PRESTO logs. Default value is "Astrolab"')
-    parser.add_argument('input_file', help='Path to input .fits file')
-    
-    args = parser.parse_args()
-    
-    main(args)
+    main()
