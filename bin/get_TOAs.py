@@ -305,6 +305,7 @@ if __name__ == '__main__':
             if t2format:
                 obs = scopes2[fold_pfd.telescope.split()[0]]
             else:
+                print("Warning! IQUEYE, ARO, IAR and CPT are not supported only in TEMPO2 format, this will probably missjudge your telescope")
                 obs = scopes[fold_pfd.telescope.split()[0]]
         except KeyError:  sys.stderr.write("Unknown telescope!!! : " + fold_pfd.telescope)
 
