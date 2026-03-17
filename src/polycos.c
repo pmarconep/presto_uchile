@@ -99,8 +99,8 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
         scopechar = '1';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "Arecibo") == 0) {
-        scopechar = '3';
-        tracklen = 3;
+        scopechar = 'm'; // Forcing Arecibo as ARO...
+        tracklen = 12;
     } else if (strcmp(idata->telescope, "VLA") == 0) {
         scopechar = '6';
         tracklen = 6;

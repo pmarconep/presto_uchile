@@ -223,9 +223,12 @@ void telescope_to_tempocode(char *inname, char *outname, char *obscode)
     if (strcmp(scope, "gbt") == 0) {
         strcpy(obscode, "GB");
         strcpy(outname, "GBT");
-    } else if (strcmp(scope, "arecibo") == 0) {
-        strcpy(obscode, "AO");
-        strcpy(outname, "Arecibo");
+    // } else if (strcmp(scope, "arecibo") == 0) {
+    //     strcpy(obscode, "AZ");
+    //     strcpy(outname, "Arecibo");
+    } else if (strcmp(scope, "arecibo") == 0) { // We have a small issue on IQUEYE @ GEMINI SOUTH, so we are forcing Arecibo as ARO. Is just the naming.
+        strcpy(obscode, "AZ");
+        strcpy(outname, "ARO");
     } else if (strcmp(scope, "vla") == 0) {
         strcpy(obscode, "VL");
         strcpy(outname, "VLA");
@@ -279,7 +282,7 @@ void telescope_to_tempocode(char *inname, char *outname, char *obscode)
         strcpy(obscode, "CP");
         strcpy(outname, "CPT");
     } else if (strcmp(scope, "aro") == 0) {
-        strcpy(obscode, "AO");
+        strcpy(obscode, "AZ");
         strcpy(outname, "ARO");
     } else if (strcmp(scope, "iar1") == 0) {
         strcpy(obscode, "IAR1");
