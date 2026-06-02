@@ -285,16 +285,16 @@ void telescope_to_tempocode(char *inname, char *outname, char *obscode)
         strcpy(obscode, "AZ");
         strcpy(outname, "ARO");
     } else if (strcmp(scope, "iar1") == 0) {
-        strcpy(obscode, "IAR1");
+        strcpy(obscode, "AR");
         strcpy(outname, "IAR1");
     } else if (strcmp(scope, "iar2") == 0) {
-        strcpy(obscode, "IAR2");
+        strcpy(obscode, "G8");
         strcpy(outname, "IAR2");
     } else if (strcmp(scope, "iar1r") == 0) {
-        strcpy(obscode, "IAR1R");
+        strcpy(obscode, "V2");
         strcpy(outname, "IAR1R");
     } else if (strcmp(scope, "iar2r") == 0) {
-        strcpy(obscode, "IAR2R");
+        strcpy(obscode, "BO");
         strcpy(outname, "IAR2R");
     } else if (strcmp(scope, "ata") == 0) {
         strcpy(obscode, "AT");
