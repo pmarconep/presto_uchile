@@ -8,7 +8,7 @@ RUN apt-get update &&\
     git \   
     ca-certificates
 
-RUN apt install -y git firefox openssh-server xauth build-essential libfftw3-bin libfftw3-dev libgsl27 libgsl-dev pgplot5 libglib2.0-dev libcfitsio-bin libcfitsio-dev libpng-dev gfortran tcsh autoconf libx11-dev python3-dev python3-numpy python3-pip python3-venv emacs nano vim rsync less
+RUN apt install -y git openssh-server xauth build-essential libfftw3-bin libfftw3-dev libgsl27 libgsl-dev pgplot5 libglib2.0-dev libcfitsio-bin libcfitsio-dev libpng-dev gfortran tcsh autoconf libx11-dev python3-dev python3-numpy python3-pip python3-venv nano vim rsync less
 
 RUN apt-get install -y libtool python3-tk
 
@@ -41,39 +41,10 @@ RUN git clone https://git.code.sf.net/p/tempo/tempo
 
 RUN rm tempo/obsys.dat
 
-RUN echo "     882589.289   -4924872.368      3943729.4  1  GBT                 1  GB" > tempo/obsys.dat \
-    && echo "     422333.200     722040.400          306.0  0  QUABBIN             2  QU" >> tempo/obsys.dat \
-    && echo "    2390487.080   -5564731.357      1994720.6  1  ARECIBO             3  AO" >> tempo/obsys.dat \
-    && echo "    -424818.000   -1472621.000           50.0  0  Hobart              4  HO" >> tempo/obsys.dat \
-    && echo "     402047.700     743853.850           43.0  0  PRINCETON           5  PR" >> tempo/obsys.dat \
-    && echo "   -1601192.000   -5041981.400      3554871.4  1  VLA                 6  VL" >> tempo/obsys.dat \
-    && echo "   -4554231.500    2816759.100     -3454036.3  1  PARKES              7  PK" >> tempo/obsys.dat \
-    && echo "    3822626.040    -154105.650      5086486.0  1  JODRELL             8  JB" >> tempo/obsys.dat \
-    && echo "     382546.300     795056.360          893.7  0  GB                  9  G3" >> tempo/obsys.dat \
-    && echo "    2765357.08    -4449628.98      -3625726.47 1  IAR1                a  AR" >> tempo/obsys.dat \
-    && echo "    2765322.49    -4449569.52      -3625825.14 0  IAR2                b  G8" >> tempo/obsys.dat \
-    && echo "    2765357.08    -4449628.98      -3625726.47 0  IAR1R               c  V2" >> tempo/obsys.dat \
-    && echo "    2765322.49    -4449569.52      -3625825.14 0  IAR2R               d  BO" >> tempo/obsys.dat \
-    && echo "   -4483311.640    2648815.920     -3671909.3  1  MOST                e  MO" >> tempo/obsys.dat \
-    && echo "    4324165.810     165927.110      4670132.8  1  Nancay              f  NC" >> tempo/obsys.dat \
-    && echo "    4033949.500     486989.400      4900430.8  1  Effels              g  EF" >> tempo/obsys.dat \
-    && echo "    3822846.760    -153802.280      5086285.9  1  JB_MKII             h  J2" >> tempo/obsys.dat \
-    && echo "     918022.899   -4346141.855      4561981.2  1  ARO                 i  AZ" >> tempo/obsys.dat \
-    && echo "    1776362.940   -5026523.140     -3491158.3  1  CPT                 k  CP" >> tempo/obsys.dat \
-    && echo "    5109360.133    2006852.586     -3238948.1  1  MEERKAT             m  MK" >> tempo/obsys.dat \
-    && echo "    1656342.300    5797947.770      2073243.2  1  GMRT                r  GM" >> tempo/obsys.dat \
-    && echo "   -2826711.951    4679231.627      3274665.7  1  SHAO                s  SH" >> tempo/obsys.dat \
-    && echo "    3826577.462     461022.624      5064892.5  1  LOFAR               t  LF" >> tempo/obsys.dat \
-    && echo "   -2559454.080    5095372.140     -2849057.2  1  MWA                 u  MW" >> tempo/obsys.dat \
-    && echo "    5088964.000     301689.800      3825017.0  1  PICO                v  PV" >> tempo/obsys.dat \
-    && echo "    1820198.199   -5208357.714     -3194851.6  1  GemS                x  GS" >> tempo/obsys.dat \
-    && echo "   -2059166.313   -3621302.972      4814304.1  1  CHIME               y  CH" >> tempo/obsys.dat \
-    && echo "    4865182.766     791922.689      4035137.2  1  SRT                 z  SR" >> tempo/obsys.dat \
-    && echo "   -1531155.544   -5045324.305      3579583.9  1  LWA-SV              -  LS" >> tempo/obsys.dat \
-    && echo "     883772.797   -4924385.598      3944042.5  1  GB                  -  G2" >> tempo/obsys.dat 
+COPY obsys.dat ${PSRHOME}/tempo/
 
-ENV TEMPO=$PSRHOME"/tempo" \
-    PATH=$PATH:$PSRHOME"/tempo/bin"
+ENV TEMPO=$PSRHOME"/tempo" 
+ENV PATH=$PATH:$PSRHOME"/tempo/bin"
 
 WORKDIR $PSRHOME/tempo
 RUN ./prepare
