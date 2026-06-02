@@ -97,9 +97,9 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
 
     if (strcmp(idata->telescope, "GBT") == 0) {
         scopechar = '1';
-        tracklen = 12;
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "Arecibo") == 0) {
-        scopechar = 'm'; // Forcing Arecibo as ARO...
+        scopechar = 'i'; // Forcing Arecibo as ARO...
         tracklen = 12;
     } else if (strcmp(idata->telescope, "VLA") == 0) {
         scopechar = '6';
@@ -147,32 +147,32 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
         tracklen = 12;
     } else if (strcmp(idata->telescope, "Gemini-S") == 0) {
         scopechar = 'x';
-        tracklen = 12;
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "CPT") == 0) {
         scopechar = 'k';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "ARO") == 0) {
-        scopechar = 'm';
-        tracklen = 12;
+        scopechar = 'i';
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "IAR1") == 0) {
         scopechar = 'a';
-        tracklen = 12;
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "IAR2") == 0) {
         scopechar = 'b';
-        tracklen = 12;
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "IAR1R") == 0) {
         scopechar = 'c';
-        tracklen = 12;
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "IAR2R") == 0) {
         scopechar = 'd';
-        tracklen = 12;
+        tracklen = 3;
     } else if (strcmp(idata->telescope, "Geocenter") == 0) {
         scopechar = 'o';
         tracklen = 12;
     } else {                    /*  Barycenter */
         printf("Defaulting to IAR1 for polyco generation...\n"); /*defaulting to IAR1 for simplicity*/
         scopechar = 'a';
-        tracklen = 12;
+        tracklen = 3;
     }
     /* For optical, X-ray, or gamma-ray data */
     if (scopechar != '@' && scopechar != 'o') {
