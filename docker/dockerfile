@@ -64,15 +64,6 @@ WORKDIR $PSRHOME/tempo2
 RUN ./bootstrap
 
 # ADD observatories
-
-RUN sed -i 's/ # IQueye at Gemini observatories' T2runtime/observatory/observatories.dat
-
-RUN sed -i 's/ -2353621.22   -4641341.52      3677052.352      GOLDSTONE           gs/  1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs/' T2runtime/observatory/observatories.dat
-
-RUN sed -i '/  1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs/a   1776362.940   -5026523.140    -3491158.3       CPT                 cpt' T2runtime/observatory/observatories.dat
-
-RUN sed -i '/  1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs/a   918022.899   -4346141.855     4561981.2       ARO                 aro' T2runtime/observatory/observatories.dat
-
 RUN cat <<EOF >> T2runtime/observatory/observatories.dat
 # IQueye at Gemini observatories
   1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs
