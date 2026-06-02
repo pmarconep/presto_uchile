@@ -97,7 +97,7 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
 
     if (strcmp(idata->telescope, "GBT") == 0) {
         scopechar = '1';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "Arecibo") == 0) {
         scopechar = 'i'; // Forcing Arecibo as ARO...
         tracklen = 12;
@@ -147,25 +147,25 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
         tracklen = 12;
     } else if (strcmp(idata->telescope, "Gemini-S") == 0) {
         scopechar = 'x';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "CPT") == 0) {
         scopechar = 'k';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "ARO") == 0) {
         scopechar = 'i';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "IAR1") == 0) {
         scopechar = 'a';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "IAR2") == 0) {
         scopechar = 'b';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "IAR1R") == 0) {
         scopechar = 'c';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "IAR2R") == 0) {
         scopechar = 'd';
-        tracklen = 3;
+        tracklen = 1;
     } else if (strcmp(idata->telescope, "Geocenter") == 0) {
         scopechar = 'o';
         tracklen = 12;
