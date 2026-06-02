@@ -1,7 +1,7 @@
 FROM ubuntu:24.04
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV PSRHOME /software
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PSRHOME=/software
 
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
@@ -17,21 +17,6 @@ RUN update-alternatives --install /usr/bin/python  python  /usr/bin/python3.12 1
 
 RUN rm /usr/lib/python3.12/EXTERNALLY-MANAGED
 RUN pip install meson meson-python ninja fitsio tqdm pint-pulsar
-
-#######################
-# SSH SETUP
-#######################
-
-RUN mkdir /var/run/sshd \ 
-    && mkdir /root/.ssh \
-    && chmod 700 /root/.ssh \
-    && ssh-keygen -A \
-    && sed -i "s/^.*PasswordAuthentication.*$/PasswordAuthentication no/" /etc/ssh/sshd_config \
-    && sed -i "s/^.*X11Forwarding.*$/X11Forwarding yes/" /etc/ssh/sshd_config \
-    && sed -i "s/^.*X11UseLocalhost.*$/X11UseLocalhost no/" /etc/ssh/sshd_config \
-    && grep "^X11UseLocalhost" /etc/ssh/sshd_config || echo "X11UseLocalhost no" >> /etc/ssh/sshd_config
-
-RUN echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoA/lZRLybPOle3xpm12j7lwB264eNZgJsB8dJ8pBD/ pmarconep@gmail.com" >> /root/.ssh/authorized_keys
 
 #######################
 # TEMPO
