@@ -113,7 +113,7 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
     } else if ((strcmp(idata->telescope, "GB43m") == 0) ||
                (strcmp(idata->telescope, "GB 140FT") == 0) ||
                (strcmp(idata->telescope, "NRAO20") == 0)) {
-        scopechar = 'a';
+        scopechar = 'w'; // v1.5: GB140 entry in obsys.dat ('a' now belongs to IAR1)
         tracklen = 12;
     } else if (strcmp(idata->telescope, "Nancay") == 0) {
         scopechar = 'f';
@@ -122,13 +122,13 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm, int de
         scopechar = 'g';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "ATA") == 0) {
-        scopechar = 's';
+        scopechar = 'n'; // v1.5: ATA entry in obsys.dat ('s' now belongs to SHAO 65m)
         tracklen = 12;
     } else if (strcmp(idata->telescope, "LOFAR") == 0) {
         scopechar = 't';
         tracklen = 12;
     } else if (strcmp(idata->telescope, "FAST") == 0) {
-        scopechar = 'k';
+        scopechar = 'j'; // v1.5: FAST entry in obsys.dat ('k' now belongs to CPT)
         tracklen = 5;
     } else if (strcmp(idata->telescope, "GMRT") == 0) {
         scopechar = 'r';

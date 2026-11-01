@@ -8,18 +8,29 @@ from presto.prepfold import pfd
 from presto.polycos import polycos
 from presto.psr_constants import *
 
+# v1.5: TEMPO1 one-char codes MUST match $TEMPO/obsys.dat of this fork.
+# Previous version kept stock-PRESTO codes that silently resolve to the
+# WRONG sites here ('x'->GemS, 'k'->CPT, 's'->SHAO, 'c'->IAR1R).
 scopes = {'GBT':'1',
-          'Arecibo':'3',
+          'Arecibo':'i',  # ARO .fil headers claim 'Arecibo' (see misc_utils.c)
+          'ARO':'i',
           'Parkes':'7',
           'GMRT': 'r',
-          'IRAM': 's',
-          'LWA1': 'x',
-          'LWA': 'x',
           'MWA': 'u',
-          'VLA': 'c',
-          'FAST': 'k',
+          'VLA': '6',
+          'GB43m': 'w',
+          'GB 140FT': 'w',
+          'FAST': 'j',
+          'WSRT': 'l',
+          'ATA': 'n',
           'MeerKAT': 'm',
-          'Geocenter': 'o'}
+          'Gemini-S': 'x',
+          'CPT': 'k',
+          'IAR1': 'a',
+          'IAR2': 'b',
+          'IAR1R': 'c',
+          'IAR2R': 'd',
+          'Geocenter': '0'}
 
 scopes2 = {'GBT':'gbt',
           'Parkes':'pks',

@@ -1148,7 +1148,7 @@ Gemini South. Make sure that you get the coordinates correct!
 ```
 ...
  5088964.00    301689.80        3825017.0      1  PICO VELETA         v  PV
--1820198.1987  -5208357.7142   -3194851.5658   1  Gemini South        x  GS
+1820198.1987  -5208357.7142   -3194851.5658   1  Gemini South        x  GS
 -2059166.313    -3621302.972    4814304.113    1  CHIME               y  CH
 ...
 ```

@@ -1,6 +1,26 @@
 # PRESTO - Gemini South Changelog 
 This fork is based in **PRESTO 5.2.0.dev**
 
+## v1.5
+- **Fixed "gs" Goldstone collision**: stock tempo2 defines `GOLDSTONE gs`;
+  tempo2 resolves the FIRST match in observatories.dat, so all `gs` TOAs
+  (Iqueye@Gemini-S) were barycentered at **Goldstone** instead of Gemini South.
+  Goldstone short name renamed to `goldstone` at docker build time.
+- Build now FAILS if any tempo2 observatory short name is duplicated
+  (same failure mode: silently barycenters at the wrong site).
+- obsys.dat: added GB140 (w/G1), FAST (j/FA), WSRT (l/WT), ATA (n/AT) —
+  previously referenced by PRESTO code with codes that did not exist or
+  belonged to other sites.
+- polycos.c: GB43m 'a'->'w', ATA 's'->'n', FAST 'k'->'j' (old codes silently
+  resolved to IAR1, SHAO 65m and CPT respectively).
+- get_TOAs.py: TEMPO1 `scopes` dict updated to this fork's obsys.dat
+  ('LWA1':'x' would have resolved to Gemini-S!, 'FAST':'k' to CPT,
+  'IRAM':'s' to SHAO, 'VLA':'c' to IAR1R). Added ARO/Gemini-S/CPT/IAR entries.
+- python/presto/polycos.py + barycenter.py: telescope tables aligned with
+  this fork's obsys.dat; added ARO/AZ, Gemini-S/GS, CPT/CP, IAR antennas
+  and the new GB140/FAST/WSRT/ATA entries.
+- FAQ.md: fixed sign of the X coordinate in the Gemini South example line.
+
 ## v1.3
 - Merged with PRESTO 5.2.0.dev (02-04-2026)
 - Added IAR1 for folding.

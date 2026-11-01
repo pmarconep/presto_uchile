@@ -12,43 +12,87 @@ NUMCOEFFS_DEFAULT = 12
 SPAN_DEFAULT = 60 # span of each polyco in minutes
 
 # Telescope name to TEMPO observatory code conversion
+# v1.5: codes MUST match $TEMPO/obsys.dat of this fork.  Stock codes kept in
+# the previous version silently resolved to the WRONG sites here ('a'->IAR1,
+# 'i'->ARO, 'k'->CPT).  GB140/FAST/WSRT/ATA got fresh obsys.dat entries.
 telescope_to_id = {"GBT": '1', \
-                   "Arecibo":' 3', \
+                   "Arecibo": '3', \
+                   "ARO": 'i', \
                    "VLA": '6', \
                    "Parkes": '7', \
                    "Jodrell": '8', \
-                   "GB43m": 'a', \
-                   "GB 140FT": 'a', \
+                   "GB43m": 'w', \
+                   "GB 140FT": 'w', \
+                   "NRAO20": 'w', \
                    "Nancay": 'f', \
                    "Effelsberg": 'g', \
-                   "WSRT": 'i', \
-                   "FAST": 'k', \
-                   "GMRT": 'r', \
+                   "WSRT": 'l', \
+                   "FAST": 'j', \
+                   "ATA": 'n', \
+                   "Gemini-S": 'x', \
+                   "CPT": 'k', \
+                   "MeerKAT": 'm', \
+                   "IAR1": 'a', \
+                   "IAR2": 'b', \
+                   "IAR1R": 'c', \
+                   "IAR2R": 'd', \
+                   "MOST": 'e', \
+                   "JB_MKII": 'h', \
+                   "GB 300FT": '9', \
+                   "SHAO 65m": 's', \
+                   "LOFAR": 't', \
+                   "MWA": 'u', \
+                   "PICO VELETA": 'v', \
                    "CHIME": 'y', \
+                   "SRT": 'z', \
+                   "GMRT": 'r', \
                    "Geocenter": '0', \
                    "Barycenter": '@'}
 
 # TEMPO observatory code to Telescope name conversion
+# v1.5: updated to match $TEMPO/obsys.dat ('a'/'b'/'c'/'d' are the IAR
+# antennas, 'i' is ARO, 'k' is CPT, 'x' is Gemini-S in this fork).
 id_to_telescope = {'1': "GBT", \
+                   '2': "QUABBIN", \
                    '3': "Arecibo", \
+                   '4': "Hobart", \
+                   '5': "PRINCETON", \
                    '6': "VLA", \
                    '7': "Parkes", \
                    '8': "Jodrell", \
-                   'a': "GB43m", \
-                   'a': "GB 140FT", \
+                   '9': "GB 300FT", \
+                   'a': "IAR1", \
+                   'b': "IAR2", \
+                   'c': "IAR1R", \
+                   'd': "IAR2R", \
+                   'e': "MOST", \
                    'f': "Nancay", \
                    'g': "Effelsberg", \
-                   'i': "WSRT", \
-                   'k': "FAST", \
+                   'h': "JB_MKII", \
+                   'i': "ARO", \
+                   'j': "FAST", \
+                   'k': "CPT", \
+                   'l': "WSRT", \
+                   'm': "MeerKAT", \
+                   'n': "ATA", \
                    'r': "GMRT", \
+                   's': "SHAO 65m", \
+                   't': "LOFAR", \
+                   'u': "MWA", \
+                   'v': "PICO VELETA", \
+                   'w': "GB140", \
+                   'x': "Gemini-S", \
                    'y': "CHIME", \
+                   'z': "SRT", \
                    '0': "Geocenter", \
                    '@': "Barycenter"}
 
 # Telescope name to track length (max hour angle) conversion
 telescope_to_maxha = {"GBT": 12, \
                    "Arecibo": 3, \
+                   "ARO": 12, \
                    "FAST": 5, \
+                   "ATA": 12, \
                    "VLA": 6, \
                    "Parkes": 12, \
                    "Jodrell": 12, \
@@ -57,6 +101,13 @@ telescope_to_maxha = {"GBT": 12, \
                    "Nancay": 4, \
                    "Effelsberg": 12, \
                    "WSRT": 12, \
+                   "Gemini-S": 12, \
+                   "CPT": 12, \
+                   "MeerKAT": 12, \
+                   "IAR1": 12, \
+                   "IAR2": 12, \
+                   "IAR1R": 12, \
+                   "IAR2R": 12, \
                    "GMRT": 12, \
                    "CHIME": 1, \
                    "Geocenter": 12, \

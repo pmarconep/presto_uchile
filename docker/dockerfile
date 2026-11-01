@@ -49,12 +49,28 @@ WORKDIR $PSRHOME/tempo2
 RUN ./bootstrap
 
 # ADD observatories
+# v1.5: stock tempo2 already defines "GOLDSTONE" with short name "gs".
+# tempo2 resolves the FIRST match in observatories.dat, so "gs" must be
+# unique for Gemini South.  Rename Goldstone before appending GEMINI_S.
+# Also rename UAO's short name (duplicates NANSHAN's "NS" in stock tempo2).
+RUN sed -i -e '/GOLDSTONE/s/[[:space:]]gs[[:space:]]*$/ goldstone/' \
+           -e '/UAO/s/[[:space:]]NS[[:space:]]*$/ uao/' \
+           T2runtime/observatory/observatories.dat
 RUN cat <<EOF >> T2runtime/observatory/observatories.dat
 # IQueye at Gemini observatories
   1820198.199   -5208357.714    -3194851.6       GEMINI_S            gs
   1776362.940   -5026523.140    -3491158.3       CPT                 cpt
   918022.899   -4345980.855      4561981.2       ARO                 aro
 EOF
+
+# v1.5: fail the build if any tempo2 observatory short name is duplicated
+RUN dups=$$(awk '$$1 ~ /^[-0-9]/ {print $$5}' T2runtime/observatory/observatories.dat | sort | uniq -d); \
+    if [ -n "$$dups" ]; then \
+        echo "ERROR: duplicated tempo2 observatory short names: $$dups"; \
+        echo "tempo2 uses the FIRST match, duplicates barycenter at the wrong site!"; \
+        exit 1; \
+    fi
+
 
 RUN cp -r T2runtime /usr/share/tempo2/
 ENV TEMPO2=/usr/share/tempo2/
