@@ -28,11 +28,7 @@
  4865182.7660  791922.6890      4035137.1740   1  SRT                 z  SR
 -1531155.54418 -5045324.30517   3579583.89450  1  LWA-SV              -  LS
   883772.79740 -4924385.59750   3944042.49910  1  GB 20m XYZ          -  G2
-# v1.5: added observatories referenced by PRESTO code but missing here.
-# Fresh one-char codes (w, j, l, n) to avoid collisions with reused stock
-# codes (i=ARO, k=CPT, s=SHAO, a=IAR1). Coordinates from tempo2 runtime
-# (GB140, ATA, FAST) and stock TEMPO obsys.dat (WSRT).
- 882872.57    -4924552.73      3944154.92     1  GB140               w  G1
--1668557.0     5506838.0        2744934.0      1  FAST                j  FA
- 3828445.659    445223.600      5064921.5677   1  WSRT                l  WT
- -2524263.18   -4123529.78      4147966.36     1  ATA                 n  AT
+      882872.57    -4924552.73     3944154.92  1  GB140               w  G1
+     -1668557.0      5506838.0      2744934.0  1  FAST                j  FA
+    3828445.659       445223.6   5064921.5677  1  WSRT                l  WT
+    -2524263.18    -4123529.78     4147966.36  1  ATA                 n  AT
