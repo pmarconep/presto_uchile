@@ -20,6 +20,10 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
 RUN update-alternatives --install /usr/bin/python  python  /usr/bin/python3.12 1
 
 RUN rm /usr/lib/python3.12/EXTERNALLY-MANAGED
+# v1.5: pint-pulsar deps now require newer 'packaging' than ubuntu 24.04's
+# (24.0). pip cannot uninstall the debian copy (no RECORD file), so first
+# install a pip-owned copy that shadows it, then the full set.
+RUN pip install --ignore-installed packaging
 RUN pip install meson meson-python ninja fitsio tqdm pint-pulsar
 
 #######################
