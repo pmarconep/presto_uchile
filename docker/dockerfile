@@ -72,12 +72,8 @@ RUN cat <<EOF >> T2runtime/observatory/observatories.dat
 EOF
 
 # v1.5: fail the build if any tempo2 observatory short name is duplicated
-RUN dups=$$(awk '$$1 ~ /^[-0-9]/ {print $$5}' T2runtime/observatory/observatories.dat | sort | uniq -d); \
-    if [ -n "$$dups" ]; then \
-        echo "ERROR: duplicated tempo2 observatory short names: $$dups"; \
-        echo "tempo2 uses the FIRST match, duplicates barycenter at the wrong site!"; \
-        exit 1; \
-    fi
+# (written without '$$': this BuildKit passes shell-form RUN through as-is)
+RUN awk '$1 ~ /^[-0-9]/ {print $5}' T2runtime/observatory/observatories.dat | sort | uniq -d | tee /tmp/dups.txt | grep -q . && { echo "ERROR: duplicated tempo2 observatory short names:"; cat /tmp/dups.txt; echo "tempo2 uses the FIRST match -> wrong-site barycentering!"; exit 1; } || echo "OK: no duplicated observatory short names"
 
 
 RUN cp -r T2runtime /usr/share/tempo2/
