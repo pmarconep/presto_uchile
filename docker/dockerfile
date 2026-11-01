@@ -3,6 +3,10 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PSRHOME=/software
 
+# v1.5: use the Chilean Ubuntu mirror.  The default archive.ubuntu.com gives
+# ~0.2 MB/s from this machine; cl.archive.ubuntu.com gives ~10 MB/s.
+RUN sed -i 's|http://archive.ubuntu.com|http://cl.archive.ubuntu.com|g; s|http://security.ubuntu.com|http://cl.archive.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources
+
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
     git \   
